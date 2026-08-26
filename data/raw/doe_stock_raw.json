@@ -1,0 +1,1411 @@
+{
+ "meta": {
+  "source": "Department of Employment (Thailand), monthly foreign worker report",
+  "table": "aliens permitted to work remaining nationwide, by immigration channel, alien type and nationality",
+  "url": "https://www.doe.go.th/prd/alien/statistic/param/site/152/cat/82/sub/0/pull/category/view/list-label"
+ },
+ "months": {
+  "2016-01": {
+   "by_nationality": {
+    "KH": 212324,
+    "MM": 993736,
+    "LA": 76680,
+    "VN": 785
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2016-01",
+   "source_id": "5866"
+  },
+  "2016-02": {
+   "by_nationality": {
+    "KH": 237058,
+    "MM": 1058964,
+    "LA": 76474,
+    "VN": 775
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2016-02",
+   "source_id": "5867"
+  },
+  "2016-03": {
+   "by_nationality": {
+    "KH": 240088,
+    "MM": 1053298,
+    "LA": 84067,
+    "VN": 806
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2016-03",
+   "source_id": "5868"
+  },
+  "2016-04": {
+   "by_nationality": {
+    "KH": 247003,
+    "MM": 1048610,
+    "LA": 93539,
+    "VN": 805
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2016-04",
+   "source_id": "5869"
+  },
+  "2016-05": {
+   "by_nationality": {
+    "KH": 249156,
+    "MM": 1031121,
+    "LA": 92622,
+    "VN": 783
+   },
+   "rows_read": 9,
+   "split_col": 163,
+   "unit": "positions",
+   "as_of_month": "2016-05",
+   "source_id": "5870"
+  },
+  "2016-06": {
+   "by_nationality": {
+    "KH": 241268,
+    "MM": 1025474,
+    "LA": 94691,
+    "VN": 787
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2016-06",
+   "source_id": "5871"
+  },
+  "2016-07": {
+   "by_nationality": {
+    "KH": 251264,
+    "MM": 1045697,
+    "LA": 101677,
+    "VN": 798
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "source_id": "5873"
+  },
+  "2016-08": {
+   "by_nationality": {
+    "KH": 247691,
+    "MM": 973649,
+    "LA": 103300,
+    "VN": 825
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2016-08",
+   "source_id": "5874"
+  },
+  "2016-09": {
+   "by_nationality": {
+    "KH": 255121,
+    "MM": 983183,
+    "LA": 105217,
+    "VN": 834
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2016-09",
+   "source_id": "6368"
+  },
+  "2016-10": {
+   "by_nationality": {
+    "KH": 254040,
+    "MM": 958987,
+    "LA": 103031,
+    "VN": 852
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2016-10",
+   "source_id": "8032"
+  },
+  "2016-11": {
+   "by_nationality": {
+    "KH": 255586,
+    "MM": 949390,
+    "LA": 106863,
+    "VN": 877
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2016-11",
+   "source_id": "8927"
+  },
+  "2016-12": {
+   "by_nationality": {
+    "KH": 259094,
+    "MM": 940069,
+    "LA": 105953,
+    "VN": 921
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2016-12",
+   "source_id": "9412"
+  },
+  "2017-01": {
+   "by_nationality": {
+    "KH": 258050,
+    "MM": 934781,
+    "LA": 106421,
+    "VN": 908
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2017-01",
+   "source_id": "10675"
+  },
+  "2017-02": {
+   "by_nationality": {
+    "KH": 283213,
+    "MM": 967582,
+    "LA": 111542,
+    "VN": 915
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2017-02",
+   "source_id": "11711"
+  },
+  "2017-03": {
+   "by_nationality": {
+    "KH": 261255,
+    "MM": 913215,
+    "LA": 108766,
+    "VN": 926
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2017-03",
+   "source_id": "12422"
+  },
+  "2017-04": {
+   "by_nationality": {
+    "KH": 256187,
+    "MM": 879112,
+    "LA": 108949,
+    "VN": 920
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2017-04",
+   "source_id": "13127"
+  },
+  "2017-05": {
+   "by_nationality": {
+    "KH": 257823,
+    "MM": 923420,
+    "LA": 107641,
+    "VN": 963
+   },
+   "rows_read": 9,
+   "split_col": 163,
+   "unit": "positions",
+   "as_of_month": "2017-05",
+   "source_id": "14528"
+  },
+  "2017-06": {
+   "by_nationality": {
+    "KH": 266952,
+    "MM": 990215,
+    "LA": 109249,
+    "VN": 917
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2017-06",
+   "source_id": "15180"
+  },
+  "2017-07": {
+   "by_nationality": {
+    "KH": 269913,
+    "MM": 1041272,
+    "LA": 111802,
+    "VN": 909
+   },
+   "rows_read": 10,
+   "split_col": 188,
+   "unit": "positions",
+   "as_of_month": "2017-07",
+   "source_id": "16287"
+  },
+  "2017-08": {
+   "by_nationality": {
+    "KH": 259490,
+    "MM": 1050609,
+    "LA": 107627,
+    "VN": 927
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2017-08",
+   "source_id": "17567"
+  },
+  "2017-09": {
+   "by_nationality": {
+    "KH": 296403,
+    "MM": 1168605,
+    "LA": 124234,
+    "VN": 940
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2017-09",
+   "source_id": "18800"
+  },
+  "2017-10": {
+   "by_nationality": {
+    "KH": 308418,
+    "MM": 1208670,
+    "LA": 129020,
+    "VN": 955
+   },
+   "rows_read": 9,
+   "split_col": 164,
+   "unit": "positions",
+   "as_of_month": "2017-10",
+   "source_id": "19948"
+  },
+  "2017-11": {
+   "by_nationality": {
+    "KH": 332393,
+    "MM": 1277443,
+    "LA": 141955,
+    "VN": 995
+   },
+   "rows_read": 9,
+   "split_col": 163,
+   "unit": "positions",
+   "as_of_month": "2017-11",
+   "source_id": "20956"
+  },
+  "2017-12": {
+   "by_nationality": {
+    "KH": 355933,
+    "MM": 1347731,
+    "LA": 154711,
+    "VN": 1004
+   },
+   "rows_read": 9,
+   "split_col": 182,
+   "unit": "positions",
+   "as_of_month": "2017-12",
+   "source_id": "21876"
+  },
+  "2018-01": {
+   "by_nationality": {
+    "KH": 372868,
+    "MM": 1396812,
+    "LA": 171540,
+    "VN": 717
+   },
+   "rows_read": 10,
+   "split_col": 236,
+   "unit": "positions",
+   "as_of_month": "2018-01",
+   "source_id": "25232"
+  },
+  "2018-02": {
+   "by_nationality": {
+    "KH": 410719,
+    "MM": 1399218,
+    "LA": 179905,
+    "VN": 718
+   },
+   "rows_read": 10,
+   "split_col": 236,
+   "unit": "positions",
+   "as_of_month": "2018-02",
+   "source_id": "27212"
+  },
+  "2018-03": {
+   "by_nationality": {
+    "KH": 391569,
+    "MM": 1409596,
+    "LA": 180538,
+    "VN": 1050
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-03",
+   "source_id": "27306"
+  },
+  "2018-04": {
+   "by_nationality": {
+    "KH": 415304,
+    "MM": 1467031,
+    "LA": 199894,
+    "VN": 738
+   },
+   "rows_read": 10,
+   "split_col": 236,
+   "unit": "positions",
+   "as_of_month": "2018-04",
+   "source_id": "30570"
+  },
+  "2018-05": {
+   "by_nationality": {
+    "KH": 403603,
+    "MM": 1437538,
+    "LA": 198830,
+    "VN": 717
+   },
+   "rows_read": 10,
+   "split_col": 236,
+   "unit": "positions",
+   "as_of_month": "2018-05",
+   "source_id": "30872"
+  },
+  "2018-06": {
+   "by_nationality": {
+    "KH": 429075,
+    "MM": 1482683,
+    "LA": 213172,
+    "VN": 1026
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-06",
+   "source_id": "31473"
+  },
+  "2018-07": {
+   "by_nationality": {
+    "KH": 430480,
+    "MM": 1374575,
+    "LA": 216632,
+    "VN": 1036
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-07",
+   "source_id": "31998"
+  },
+  "2018-08": {
+   "by_nationality": {
+    "KH": 453895,
+    "MM": 1427390,
+    "LA": 236975,
+    "VN": 1027
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-08",
+   "source_id": "32068"
+  },
+  "2018-09": {
+   "by_nationality": {
+    "KH": 473734,
+    "MM": 1431460,
+    "LA": 240500,
+    "VN": 992
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-09",
+   "source_id": "32805"
+  },
+  "2018-10": {
+   "by_nationality": {
+    "KH": 435879,
+    "MM": 1244283,
+    "LA": 219456,
+    "VN": 1008
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-10",
+   "source_id": "33576"
+  },
+  "2018-11": {
+   "by_nationality": {
+    "KH": 497719,
+    "MM": 1253243,
+    "LA": 224342,
+    "VN": 770
+   },
+   "rows_read": 10,
+   "split_col": 237,
+   "unit": "positions",
+   "as_of_month": "2018-11",
+   "source_id": "36702"
+  },
+  "2018-12": {
+   "by_nationality": {
+    "KH": 459476,
+    "MM": 1212958,
+    "LA": 225888,
+    "VN": 1063
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2018-12",
+   "source_id": "36703"
+  },
+  "2019-01": {
+   "by_nationality": {
+    "KH": 436907,
+    "MM": 1205404,
+    "LA": 226462,
+    "VN": 1105
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2019-01",
+   "source_id": "37819"
+  },
+  "2019-02": {
+   "by_nationality": {
+    "KH": 441022,
+    "MM": 1209717,
+    "LA": 222946,
+    "VN": 1167
+   },
+   "rows_read": 9,
+   "split_col": 186,
+   "unit": "positions",
+   "as_of_month": "2019-02",
+   "source_id": "37821"
+  },
+  "2019-03": {
+   "by_nationality": {
+    "KH": 683178,
+    "MM": 1862272,
+    "LA": 270393,
+    "VN": 1178
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-03",
+   "source_id": "41719"
+  },
+  "2019-04": {
+   "by_nationality": {
+    "KH": 703893,
+    "MM": 1886603,
+    "LA": 284128,
+    "VN": 1252
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-04",
+   "source_id": "41720"
+  },
+  "2019-05": {
+   "by_nationality": {
+    "KH": 354889,
+    "MM": 504987,
+    "LA": 180533,
+    "VN": 1259
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-05",
+   "source_id": "44144"
+  },
+  "2019-06": {
+   "by_nationality": {
+    "KH": 731801,
+    "MM": 1914555,
+    "LA": 277618,
+    "VN": 1309
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-06",
+   "source_id": "44229"
+  },
+  "2019-07": {
+   "by_nationality": {
+    "KH": 721927,
+    "MM": 1909638,
+    "LA": 279956,
+    "VN": 1331
+   },
+   "rows_read": 9,
+   "split_col": 202,
+   "unit": "positions",
+   "as_of_month": "2019-07",
+   "source_id": "44299"
+  },
+  "2019-08": {
+   "by_nationality": {
+    "KH": 713864,
+    "MM": 1891192,
+    "LA": 278300,
+    "VN": 1378
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-08",
+   "source_id": "45594"
+  },
+  "2019-09": {
+   "by_nationality": {
+    "KH": 696500,
+    "MM": 1903248,
+    "LA": 281392,
+    "VN": 1402
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-09",
+   "source_id": "47326"
+  },
+  "2019-10": {
+   "by_nationality": {
+    "KH": 689916,
+    "MM": 1851221,
+    "LA": 275896,
+    "VN": 1399
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-10",
+   "source_id": "49555"
+  },
+  "2019-11": {
+   "by_nationality": {
+    "KH": 689238,
+    "MM": 1852572,
+    "LA": 281090,
+    "VN": 1422
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-11",
+   "source_id": "50679"
+  },
+  "2019-12": {
+   "by_nationality": {
+    "KH": 687009,
+    "MM": 1826042,
+    "LA": 281345,
+    "VN": 1444
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2019-12",
+   "source_id": "51926"
+  },
+  "2020-01": {
+   "by_nationality": {
+    "KH": 673679,
+    "MM": 1827095,
+    "LA": 280009,
+    "VN": 1432
+   },
+   "rows_read": 9,
+   "split_col": 200,
+   "unit": "positions",
+   "as_of_month": "2020-01",
+   "source_id": "54308"
+  },
+  "2020-02": {
+   "by_nationality": {
+    "KH": 651159,
+    "MM": 1793368,
+    "LA": 285494,
+    "VN": 1429
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2020-02",
+   "source_id": "54465"
+  },
+  "2020-03": {
+   "by_nationality": {
+    "KH": 617855,
+    "MM": 1699120,
+    "LA": 290077,
+    "VN": 1441
+   },
+   "rows_read": 9,
+   "split_col": 215,
+   "unit": "positions",
+   "as_of_month": "2020-03",
+   "source_id": "54605"
+  },
+  "2020-04": {
+   "by_nationality": {
+    "KH": 549333,
+    "MM": 1581410,
+    "LA": 254822,
+    "VN": 1639
+   },
+   "rows_read": 9,
+   "split_col": 298,
+   "unit": "positions",
+   "as_of_month": "2020-04",
+   "source_id": "56144"
+  },
+  "2020-05": {
+   "by_nationality": {
+    "KH": 531514,
+    "MM": 1550512,
+    "LA": 249318,
+    "VN": 1557
+   },
+   "rows_read": 9,
+   "split_col": 298,
+   "unit": "positions",
+   "as_of_month": "2020-05",
+   "source_id": "58094"
+  },
+  "2020-06": {
+   "by_nationality": {
+    "KH": 504828,
+    "MM": 1519238,
+    "LA": 243051,
+    "VN": 1492
+   },
+   "rows_read": 9,
+   "split_col": 218,
+   "unit": "positions",
+   "as_of_month": "2020-06",
+   "source_id": "61082"
+  },
+  "2020-07": {
+   "by_nationality": {
+    "KH": 492899,
+    "MM": 1503154,
+    "LA": 236068,
+    "VN": 1406
+   },
+   "rows_read": 9,
+   "split_col": 217,
+   "unit": "positions",
+   "as_of_month": "2020-07",
+   "source_id": "60859"
+  },
+  "2020-08": {
+   "by_nationality": {
+    "KH": 481308,
+    "MM": 1488233,
+    "LA": 229823,
+    "VN": 1352
+   },
+   "rows_read": 9,
+   "split_col": 214,
+   "unit": "positions",
+   "as_of_month": "2020-08",
+   "source_id": "61003"
+  },
+  "2020-09": {
+   "by_nationality": {
+    "KH": 491175,
+    "MM": 1520974,
+    "LA": 226914,
+    "VN": 1319
+   },
+   "rows_read": 9,
+   "split_col": 187,
+   "unit": "positions",
+   "as_of_month": "2020-09",
+   "source_id": "62539"
+  },
+  "2020-10": {
+   "by_nationality": {
+    "KH": 501950,
+    "MM": 1562413,
+    "LA": 225933,
+    "VN": 1302
+   },
+   "rows_read": 9,
+   "split_col": 187,
+   "unit": "positions",
+   "as_of_month": "2020-10",
+   "source_id": "63677"
+  },
+  "2020-11": {
+   "by_nationality": {
+    "KH": 516162,
+    "MM": 1588504,
+    "LA": 224363,
+    "VN": 1300
+   },
+   "rows_read": 9,
+   "split_col": 187,
+   "unit": "positions",
+   "as_of_month": "2020-11",
+   "source_id": "64776"
+  },
+  "2020-12": {
+   "by_nationality": {
+    "KH": 388554,
+    "MM": 1079615,
+    "LA": 195408,
+    "VN": 1284
+   },
+   "rows_read": 9,
+   "split_col": 187,
+   "unit": "positions",
+   "as_of_month": "2020-12",
+   "source_id": "66129"
+  },
+  "2021-01": {
+   "by_nationality": {
+    "KH": 433300,
+    "MM": 1340452,
+    "LA": 204591,
+    "VN": 1281
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2021-01",
+   "source_id": "67977"
+  },
+  "2021-02": {
+   "by_nationality": {
+    "KH": 415675,
+    "MM": 1321915,
+    "LA": 200264,
+    "VN": 1272
+   },
+   "rows_read": 9,
+   "split_col": 203,
+   "unit": "positions",
+   "as_of_month": "2021-02",
+   "source_id": "68606"
+  },
+  "2021-03": {
+   "by_nationality": {
+    "KH": 420594,
+    "MM": 1342188,
+    "LA": 202819,
+    "VN": 1250
+   },
+   "rows_read": 9,
+   "split_col": 182,
+   "unit": "positions",
+   "as_of_month": "2021-03",
+   "source_id": "70087"
+  },
+  "2021-04": {
+   "by_nationality": {
+    "KH": 446011,
+    "MM": 1407767,
+    "LA": 218288,
+    "VN": 1266
+   },
+   "rows_read": 9,
+   "split_col": 223,
+   "unit": "positions",
+   "as_of_month": "2021-04",
+   "source_id": "71025"
+  },
+  "2021-05": {
+   "by_nationality": {
+    "KH": 452203,
+    "MM": 1423443,
+    "LA": 220993,
+    "VN": 1273
+   },
+   "rows_read": 9,
+   "split_col": 223,
+   "unit": "positions",
+   "as_of_month": "2021-05",
+   "source_id": "72010"
+  },
+  "2021-06": {
+   "by_nationality": {
+    "KH": 470592,
+    "MM": 1471366,
+    "LA": 227286,
+    "VN": 950
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "as_of_month": "2021-06",
+   "source_id": "73184"
+  },
+  "2021-07": {
+   "by_nationality": {
+    "KH": 465270,
+    "MM": 1471367,
+    "LA": 223639,
+    "VN": 936
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "source_id": "75884"
+  },
+  "2021-08": {
+   "by_nationality": {
+    "KH": 457399,
+    "MM": 1459190,
+    "LA": 219106,
+    "VN": 922
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "as_of_month": "2021-08",
+   "source_id": "76348"
+  },
+  "2021-09": {
+   "by_nationality": {
+    "KH": 463131,
+    "MM": 1481211,
+    "LA": 218823,
+    "VN": 1215
+   },
+   "rows_read": 9,
+   "split_col": 173,
+   "unit": "positions",
+   "as_of_month": "2021-09",
+   "source_id": "78312"
+  },
+  "2021-10": {
+   "by_nationality": {
+    "KH": 455914,
+    "MM": 1468361,
+    "LA": 213508,
+    "VN": 944
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "as_of_month": "2021-10",
+   "source_id": "78901"
+  },
+  "2021-11": {
+   "by_nationality": {
+    "KH": 449066,
+    "MM": 1460375,
+    "LA": 207458,
+    "VN": 982
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "as_of_month": "2021-11",
+   "source_id": "80655"
+  },
+  "2021-12": {
+   "by_nationality": {
+    "KH": 456059,
+    "MM": 1468840,
+    "LA": 213576,
+    "VN": 1027
+   },
+   "rows_read": 9,
+   "split_col": 219,
+   "unit": "positions",
+   "as_of_month": "2021-12",
+   "source_id": "81284"
+  },
+  "2022-01": {
+   "by_nationality": {
+    "KH": 448243,
+    "MM": 1490050,
+    "LA": 200887,
+    "VN": 1327
+   },
+   "rows_read": 9,
+   "split_col": 194,
+   "unit": "positions",
+   "as_of_month": "2022-01",
+   "source_id": "83980"
+  },
+  "2022-02": {
+   "by_nationality": {
+    "KH": 442847,
+    "MM": 1496835,
+    "LA": 192418,
+    "VN": 1339
+   },
+   "rows_read": 9,
+   "split_col": 194,
+   "unit": "positions",
+   "as_of_month": "2022-02",
+   "source_id": "83982"
+  },
+  "2022-03": {
+   "by_nationality": {
+    "KH": 436460,
+    "MM": 1510557,
+    "LA": 184785,
+    "VN": 989
+   },
+   "rows_read": 9,
+   "split_col": 194,
+   "unit": "positions",
+   "as_of_month": "2022-03",
+   "source_id": "87070"
+  },
+  "2022-04": {
+   "by_nationality": {
+    "KH": 347361,
+    "MM": 1269445,
+    "LA": 169092,
+    "VN": 1368
+   },
+   "rows_read": 9,
+   "split_col": 154,
+   "unit": "positions",
+   "as_of_month": "2022-04",
+   "source_id": "87378"
+  },
+  "2022-05": {
+   "by_nationality": {
+    "KH": 383215,
+    "MM": 1383963,
+    "LA": 175086,
+    "VN": 1397
+   },
+   "rows_read": 9,
+   "split_col": 154,
+   "unit": "positions",
+   "as_of_month": "2022-05",
+   "source_id": "93433"
+  },
+  "2023-04": {
+   "by_nationality": {
+    "KH": 284855,
+    "MM": 1555292,
+    "LA": 92544,
+    "VN": 3892
+   },
+   "rows_read": 8,
+   "split_col": 777,
+   "unit": "persons",
+   "as_of_month": "2023-04",
+   "source_id": "102293"
+  },
+  "2023-06": {
+   "by_nationality": {
+    "KH": 287456,
+    "MM": 1551929,
+    "LA": 92542,
+    "VN": 3954
+   },
+   "rows_read": 8,
+   "split_col": 765,
+   "unit": "persons",
+   "as_of_month": "2023-06",
+   "source_id": "104831"
+  },
+  "2023-07": {
+   "by_nationality": {
+    "KH": 294971,
+    "MM": 1552224,
+    "LA": 92544,
+    "VN": 3947
+   },
+   "rows_read": 8,
+   "split_col": 764,
+   "unit": "persons",
+   "as_of_month": "2023-07",
+   "source_id": "106083"
+  },
+  "2023-08": {
+   "by_nationality": {
+    "KH": 236780,
+    "MM": 1451171,
+    "LA": 76582,
+    "VN": 3139
+   },
+   "rows_read": 8,
+   "split_col": 765,
+   "unit": "persons",
+   "as_of_month": "2023-08",
+   "source_id": "108357"
+  },
+  "2023-09": {
+   "by_nationality": {
+    "KH": 232422,
+    "MM": 1445422,
+    "LA": 76197,
+    "VN": 3141
+   },
+   "rows_read": 8,
+   "split_col": 765,
+   "unit": "persons",
+   "as_of_month": "2023-09",
+   "source_id": "109495"
+  },
+  "2023-10": {
+   "by_nationality": {
+    "KH": 230175,
+    "MM": 1441936,
+    "LA": 75988,
+    "VN": 3194
+   },
+   "rows_read": 8,
+   "split_col": 765,
+   "unit": "persons",
+   "as_of_month": "2023-10",
+   "source_id": "110046"
+  },
+  "2023-11": {
+   "by_nationality": {
+    "KH": 240706,
+    "MM": 1439388,
+    "LA": 75635,
+    "VN": 3221
+   },
+   "rows_read": 8,
+   "split_col": 763,
+   "unit": "persons",
+   "as_of_month": "2023-11",
+   "source_id": "111605"
+  },
+  "2023-12": {
+   "by_nationality": {
+    "KH": 249211,
+    "MM": 1438480,
+    "LA": 75288,
+    "VN": 3222
+   },
+   "rows_read": 8,
+   "split_col": 765,
+   "unit": "persons",
+   "as_of_month": "2023-12",
+   "source_id": "112426"
+  },
+  "2024-01": {
+   "by_nationality": {
+    "MM": 2387524,
+    "LA": 265971,
+    "KH": 501617,
+    "VN": 5837
+   },
+   "rows_read": 9,
+   "split_col": 631,
+   "unit": "persons",
+   "as_of_month": "2024-01",
+   "source_id": "114071"
+  },
+  "2024-02": {
+   "by_nationality": {
+    "MM": 2313909,
+    "LA": 252035,
+    "KH": 460639,
+    "VN": 5474
+   },
+   "rows_read": 9,
+   "split_col": 595,
+   "unit": "persons",
+   "as_of_month": "2024-02",
+   "source_id": "121940"
+  },
+  "2024-03": {
+   "by_nationality": {
+    "MM": 2316086,
+    "LA": 261547,
+    "KH": 471765,
+    "VN": 5607
+   },
+   "rows_read": 9,
+   "split_col": 581,
+   "unit": "persons",
+   "as_of_month": "2024-03",
+   "source_id": "121941"
+  },
+  "2024-04": {
+   "by_nationality": {
+    "MM": 2317070,
+    "LA": 265792,
+    "KH": 479243,
+    "VN": 5653
+   },
+   "rows_read": 9,
+   "split_col": 596,
+   "unit": "persons",
+   "as_of_month": "2024-04",
+   "source_id": "121942"
+  },
+  "2024-05": {
+   "by_nationality": {
+    "MM": 2311921,
+    "LA": 268968,
+    "KH": 475659,
+    "VN": 5709
+   },
+   "rows_read": 9,
+   "split_col": 579,
+   "unit": "persons",
+   "as_of_month": "2024-05",
+   "source_id": "121943"
+  },
+  "2024-06": {
+   "by_nationality": {
+    "MM": 2307504,
+    "LA": 273051,
+    "KH": 483578,
+    "VN": 5739
+   },
+   "rows_read": 9,
+   "split_col": 595,
+   "unit": "persons",
+   "as_of_month": "2024-06",
+   "source_id": "121944"
+  },
+  "2024-07": {
+   "by_nationality": {
+    "MM": 2307576,
+    "LA": 276821,
+    "KH": 491067,
+    "VN": 5740
+   },
+   "rows_read": 9,
+   "split_col": 580,
+   "unit": "persons",
+   "as_of_month": "2024-07",
+   "source_id": "121945"
+  },
+  "2024-08": {
+   "by_nationality": {
+    "MM": 2306146,
+    "LA": 279714,
+    "KH": 492739,
+    "VN": 5826
+   },
+   "rows_read": 9,
+   "split_col": 617,
+   "unit": "persons",
+   "as_of_month": "2024-08",
+   "source_id": "122524"
+  },
+  "2024-09": {
+   "by_nationality": {
+    "MM": 2305801,
+    "LA": 282881,
+    "KH": 493855,
+    "VN": 5736
+   },
+   "rows_read": 9,
+   "split_col": 632,
+   "unit": "persons",
+   "as_of_month": "2024-09",
+   "source_id": "123816"
+  },
+  "2024-10": {
+   "by_nationality": {
+    "MM": 2298323,
+    "LA": 285291,
+    "KH": 492029,
+    "VN": 5603
+   },
+   "rows_read": 9,
+   "split_col": 618,
+   "unit": "persons",
+   "as_of_month": "2024-10",
+   "source_id": "125126"
+  },
+  "2024-11": {
+   "by_nationality": {
+    "MM": 2292715,
+    "LA": 286992,
+    "KH": 494411,
+    "VN": 5643
+   },
+   "rows_read": 9,
+   "split_col": 630,
+   "unit": "persons",
+   "as_of_month": "2024-11",
+   "source_id": "126335"
+  },
+  "2024-12": {
+   "by_nationality": {
+    "MM": 2280072,
+    "LA": 291844,
+    "KH": 499531,
+    "VN": 5670
+   },
+   "rows_read": 9,
+   "split_col": 617,
+   "unit": "persons",
+   "as_of_month": "2024-12",
+   "source_id": "127302"
+  },
+  "2025-01": {
+   "by_nationality": {
+    "MM": 2275269,
+    "LA": 306127,
+    "KH": 502743,
+    "VN": 5575
+   },
+   "rows_read": 9,
+   "split_col": 618,
+   "unit": "persons",
+   "as_of_month": "2025-01",
+   "source_id": "128259"
+  },
+  "2025-02": {
+   "by_nationality": {
+    "MM": 2278074,
+    "LA": 324825,
+    "KH": 502970,
+    "VN": 5583
+   },
+   "rows_read": 9,
+   "split_col": 627,
+   "unit": "persons",
+   "as_of_month": "2025-02",
+   "source_id": "129699"
+  },
+  "2025-03": {
+   "by_nationality": {
+    "MM": 2276468,
+    "LA": 337129,
+    "KH": 495529,
+    "VN": 5607
+   },
+   "rows_read": 9,
+   "split_col": 613,
+   "unit": "persons",
+   "as_of_month": "2025-03",
+   "source_id": "131586"
+  },
+  "2025-04": {
+   "by_nationality": {
+    "MM": 3004271,
+    "LA": 286498,
+    "KH": 516321,
+    "VN": 8984
+   },
+   "rows_read": 9,
+   "split_col": 579,
+   "unit": "persons",
+   "as_of_month": "2025-04",
+   "source_id": "132244"
+  },
+  "2025-05": {
+   "by_nationality": {
+    "MM": 1163489,
+    "LA": 287840,
+    "KH": 447286,
+    "VN": 8915
+   },
+   "rows_read": 9,
+   "split_col": 589,
+   "unit": "persons",
+   "as_of_month": "2025-05",
+   "source_id": "132930"
+  },
+  "2025-06": {
+   "by_nationality": {
+    "MM": 1134315,
+    "LA": 290495,
+    "KH": 485223,
+    "VN": 8818
+   },
+   "rows_read": 9,
+   "split_col": 590,
+   "unit": "persons",
+   "as_of_month": "2025-06",
+   "source_id": "134272"
+  },
+  "2025-07": {
+   "by_nationality": {
+    "MM": 1136716,
+    "LA": 293946,
+    "KH": 500606,
+    "VN": 8896
+   },
+   "rows_read": 9,
+   "split_col": 431,
+   "unit": "persons",
+   "as_of_month": "2025-07",
+   "source_id": "135161"
+  },
+  "2025-08": {
+   "by_nationality": {
+    "MM": 1123644,
+    "LA": 300680,
+    "KH": 478126,
+    "VN": 8919
+   },
+   "rows_read": 9,
+   "split_col": 588,
+   "unit": "persons",
+   "as_of_month": "2025-08",
+   "source_id": "135989"
+  },
+  "2025-09": {
+   "by_nationality": {
+    "KH": 454530,
+    "MM": 1119637,
+    "LA": 304786,
+    "VN": 8914
+   },
+   "rows_read": 9,
+   "split_col": 431,
+   "unit": "persons",
+   "as_of_month": "2025-09",
+   "source_id": "137204"
+  },
+  "2025-10": {
+   "by_nationality": {
+    "KH": 407242,
+    "MM": 1114005,
+    "LA": 305663,
+    "VN": 9002
+   },
+   "rows_read": 9,
+   "split_col": 433,
+   "unit": "persons",
+   "as_of_month": "2025-10",
+   "source_id": "138407"
+  },
+  "2025-11": {
+   "by_nationality": {
+    "KH": 397148,
+    "MM": 2938929,
+    "LA": 302969,
+    "VN": 8989
+   },
+   "rows_read": 9,
+   "split_col": 418,
+   "unit": "persons",
+   "as_of_month": "2025-11",
+   "source_id": "145703"
+  }
+ }
+}

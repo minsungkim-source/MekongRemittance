@@ -1,0 +1,17 @@
+# Source PDFs cached by the DOE parsers -- 450MB, and every one is
+# re-downloadable from the URLs recorded in data/raw/doe_file_index.json
+data/raw/doe_pdf/
+data/raw/*.bin
+data/raw/*.html
+data/raw/*.log
+data/raw/*.txt
+# one-off API listing, not a pipeline input
+data/raw/wb_sources.json
+
+# The published page lives at the repository root; dist/ is a build duplicate
+dist/
+
+# Local tooling
+.claude/
+__pycache__/
+.DS_Store

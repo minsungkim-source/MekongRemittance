@@ -1,0 +1,54 @@
+{
+ "meta": {
+  "source": "Department of Employment, Thailand -- monthly foreign worker report",
+  "url": "https://www.doe.go.th/prd/alien/statistic/param/site/152/cat/82/sub/0/pull/category/view/list-label",
+  "note": "stock of valid work permits by nationality, all permit categories"
+ },
+ "months": {
+  "2025-07": {
+   "by_nationality": {
+    "KH": 519684,
+    "MM": 2960776,
+    "LA": 293701,
+    "VN": 8896
+   },
+   "total4": 3783057,
+   "total4_reported": 3783057,
+   "source_id": "135161"
+  },
+  "2025-08": {
+   "by_nationality": {
+    "KH": 490624,
+    "MM": 2947987,
+    "LA": 300429,
+    "VN": 8919
+   },
+   "total4": 3747959,
+   "total4_reported": 3747959,
+   "source_id": "135989"
+  },
+  "2025-09": {
+   "by_nationality": {
+    "KH": 454288,
+    "MM": 2944034,
+    "LA": 304540,
+    "VN": 8914
+   },
+   "total4": 3711776,
+   "total4_reported": 3711776,
+   "source_id": "137204"
+  },
+  "2025-11": {
+   "by_nationality": {
+    "KH": 396930,
+    "MM": 2934379,
+    "LA": 302740,
+    "VN": 8989
+   },
+   "total4": 3643038,
+   "total4_reported": 3643038,
+   "as_of": "2025-11-25",
+   "source_id": "145703"
+  }
+ }
+}
