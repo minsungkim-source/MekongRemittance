@@ -22,7 +22,7 @@
    and an explicit theme stamp both win in the right direction.        */
 :root{
   --paper:#d7dbdc; --paper-2:#eceeed; --surface:#f8f9f8;
-  --ink:#13181b; --ink-2:#454f56; --ink-3:#7b858c;
+  --ink:#13181b; --ink-2:#454f56; --ink-3:#667077;   /* 4.80:1 on --surface */
   --rule:#c2c7c8; --rule-2:#dfe2e2; --hair:#13181b;
   --petrol:#2c4d61; --petrol-2:#4a7691; --ember:#a8491a; --ember-2:#c9702f;
   --s1:#f5e3ce; --s2:#e9bd91; --s3:#d9945c; --s4:#bd6b30; --s5:#94420f;
@@ -40,7 +40,7 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#0f1315; --paper-2:#1b2124; --surface:#161b1e;
-  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#79838a;
+  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#8a949b;   /* 5.61:1 on --surface */
   --rule:#2c3336; --rule-2:#242b2e; --hair:#4e585d;
   --petrol:#3a6480; --petrol-2:#5d90ad; --ember:#d9834f; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
@@ -52,7 +52,7 @@
 }}
 :root[data-theme="dark"]{
   --paper:#0f1315; --paper-2:#1b2124; --surface:#161b1e;
-  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#79838a;
+  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#8a949b;   /* 5.61:1 on --surface */
   --rule:#2c3336; --rule-2:#242b2e; --hair:#4e585d;
   --petrol:#3a6480; --petrol-2:#5d90ad; --ember:#d9834f; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
@@ -313,6 +313,10 @@ th{text-align:right;font-weight:600;font-size:8.5px;letter-spacing:.11em;
 th:first-child,td:first-child{text-align:left;padding-left:0}
 th:hover{color:var(--ink)}
 th[aria-sort]{color:var(--ink)}
+/* the sort control is a real button for the keyboard, but reads as the header */
+.sortbtn{all:unset;display:inline;cursor:pointer;font:inherit;color:inherit;
+  letter-spacing:inherit;text-transform:inherit}
+.sortbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 td{border-bottom:1px solid var(--rule-2);padding:5px 9px;text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
 tbody tr:hover{background:var(--paper-2)}

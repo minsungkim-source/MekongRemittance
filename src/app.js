@@ -27,6 +27,7 @@ en: {
   mSi: 'Seasonal index', mLevel: 'Flow per quarter', mShare: 'Corridor share',
   mWorker: 'Per worker, per month', mYoy: 'Year on year',
   gAll: 'Show modelled', gMeasured: 'Measured only',
+  hiddenModelled: 'Hidden. Every figure in this panel is modelled, and this view shows only what the sources state directly.',
   boardSi: 'Seasonal index by quarter', boardLevel: 'Flow by quarter',
   boardShare: 'Corridor share by quarter', boardWorker: 'Per worker per month',
   boardYoy: 'Year-on-year change',
@@ -105,6 +106,7 @@ th: {
   mShare: 'สัดส่วนเส้นทาง', mWorker: 'ต่อคนต่อเดือน',
   mYoy: 'เทียบปีก่อน',
   gAll: 'แสดงค่าจำลอง', gMeasured: 'เซพาะค่าที่วัดได้',
+  hiddenModelled: 'ซ่อนอยู่ ทุกตัวเลขในแผงนี้เป็นค่าจำลอง มุมมองนี้แสดงเฉพาะสิ่งที่แหล่งข้อมูลระบุโดยตรง',
   boardSi: 'ดัชนีตามฤดูกาลรายไตรมาส',
   boardLevel: 'มีลค่ารายไตรมาส',
   boardShare: 'สัดส่วนเส้นทางรายไตรมาส',
@@ -171,6 +173,7 @@ ko: {
   mSi: '계절지수', mLevel: '분기 규모', mShare: '코리도 점유율',
   mWorker: '1인당 월 송금', mYoy: '전년 대비',
   gAll: '모형치 표시', gMeasured: '실측만',
+  hiddenModelled: '숨김. 이 패널의 모든 수치는 모형치이고, 이 보기는 출처가 직접 밝힌 것만 보여준다.',
   boardSi: '분기별 계절지수', boardLevel: '분기별 규모', boardShare: '분기별 코리도 점유율',
   boardWorker: '1인당 월 송금', boardYoy: '전년 대비 증감',
   chartTitle: '대외 개인이전 지급, 분기',
@@ -486,6 +489,7 @@ let VIEW = {ser: {}, kind: {}, metric: 'si'};
 function renderBoard() {
   const md = METRIC_DEF[state.metric];
   const hidden = state.measuredOnly && state.corridor !== 'ALL';
+  const modeBanner = state.measuredOnly;
   let ser = {}, kind = {};
   if (!hidden) {
     const base = seriesFor(state.metric, state.corridor);
@@ -501,7 +505,7 @@ function renderBoard() {
     ? `<span class="g gA">A · ${T('gradeA')}</span>` : `<span class="g gB">B · ${T('gradeB')}</span>`;
 
   let banner = '';
-  if (hidden) banner = T('measuredBanner');
+  if (modeBanner) banner = T('measuredBanner');
   else if (state.corridor !== 'ALL') {
     const runs = DATA.meta.doe_regimes.filter(r => r.quarters.length)
       .map(r => `${r.quarters[0]}–${r.quarters[r.quarters.length - 1]}`).join(', ');
@@ -624,6 +628,16 @@ function lastQuartersWithModel(n) {
   return r ? r.quarters.slice(-n) : [];
 }
 function renderRank() {
+  document.getElementById('rankTitle').textContent = T('rankTitle');
+  // Everything in this panel is modelled, so "measured only" has to empty it.
+  // Leaving the figures up while the banner says they are hidden would make the
+  // page's own honesty control a lie.
+  if (state.measuredOnly) {
+    document.getElementById('rank').innerHTML =
+      `<div class="empty">${T('hiddenModelled')}</div>`;
+    document.getElementById('rankHint').textContent = '';
+    return;
+  }
   const qs = lastQuartersWithModel(4);
   const tot = {};
   DATA.corridors.forEach(c => tot[c.code] = qs.reduce((s, q) => s + (flowOf(q, c.code) || 0), 0));
@@ -636,6 +650,7 @@ function renderRank() {
       <div class="bar"><i style="width:${Math.max(2, 92 * tot[c.code] / max)}px"></i>
         <span class="v">${bn(tot[c.code])}</span></div></div>`).join('');
   const run = latestRun();
+  document.getElementById('rankTitle').textContent = T('rankTitle');
   document.getElementById('rankHint').textContent = T('rankHint') +
     (qs.length ? ` (${qs[0]}–${qs[qs.length - 1]}, ${T('regime')} ${run.id}, ${qs.length}q)` : '');
 }
@@ -643,6 +658,12 @@ function renderFlows() {
   const qs = lastQuartersWithModel(1);
   const q = qs[0];
   const host = document.getElementById('flows');
+  document.getElementById('flowTitle').textContent = T('flowTitle');
+  if (state.measuredOnly) {                       // widths and per-worker are modelled
+    host.innerHTML = `<div class="empty">${T('hiddenModelled')}</div>`;
+    document.getElementById('flowHint').textContent = '';
+    return;
+  }
   if (!q) { host.innerHTML = `<div class="empty">${T('noRun')}</div>`; return; }
   const vals = {};
   DATA.corridors.forEach(c => vals[c.code] = flowOf(q, c.code) || 0);
@@ -674,6 +695,7 @@ function renderContext() {
       <div class="n">${cname(r.c)}${r.y && r.y < 2024 ? ` <span style="color:var(--ember)">· ends ${r.y}</span>` : ''}</div>
       <div class="bar"><i style="width:${Math.max(2, 76 * (r.v || 0) / max)}px;background:var(--petrol-2)"></i>
         <span class="v">${r.v == null ? T('none') : '$' + nf(r.v / 1e9, 1) + 'bn'}</span></div></div>`).join('');
+  document.getElementById('ctxTitle').textContent = T('ctxTitle');
   document.getElementById('ctxHint').textContent = T('ctxHint') +
     (fxYears.length ? ` · FX ${fxYears[0]}: ${DATA.wb.fx[fxYears[0]].toFixed(1)} ฿/$` : '');
 }
@@ -945,7 +967,9 @@ function renderTable() {
   }
   const keys = ['q', 'paid', 'si', 'workers', 'share', 'flow', 'pw'];
   document.getElementById('thead').innerHTML = cols.map((c, i) =>
-    `<th data-k="${keys[i]}" ${state.sortKey === keys[i] ? `aria-sort="${state.sortDir > 0 ? 'ascending' : 'descending'}"` : ''}>${c}</th>`).join('');
+    `<th data-k="${keys[i]}"${state.sortKey === keys[i]
+        ? ` aria-sort="${state.sortDir > 0 ? 'ascending' : 'descending'}"` : ''}>`
+      + `<button type="button" class="sortbtn">${c}</button></th>`).join('');
   document.getElementById('tbody').innerHTML = rows.map(r => `<tr>
     <td>${r.q}${PROV.has(r.q) ? ' ·p' : ''}</td>
     <td>${mb(r.paid)}</td>
