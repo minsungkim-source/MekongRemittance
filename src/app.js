@@ -680,10 +680,19 @@ function renderContext() {
 
 /* ── render: the long series ─────────────────────────────────────────── */
 function renderChart() {
-  const W = 760, H = 184, ml = 40, mr = 8, mt = 10, mb2 = 20;
+  const host = document.getElementById('chartHost');
+  // The viewBox is drawn to the host's real pixel width, so nothing is
+  // scaled non-uniformly and the axis labels keep their proportions at
+  // every screen size.
+  const W = Math.max(300, Math.round(host.getBoundingClientRect().width) || 760);
+  const H = 184, ml = 40, mr = 34, mt = 14, mb2 = 20;
   const iw = W - ml - mr, ih = H - mt - mb2;
   const vals = Q.map(q => PT[q]);
-  const max = Math.max(...vals) * 1.06;
+  // Ticks land on round baht figures the series actually reaches, not on
+  // thirds of the maximum.
+  const step = (v => { const p = 10 ** Math.floor(Math.log10(v));
+    return ([1, 2, 2.5, 5, 10].find(k => k * p >= v) || 10) * p; })(Math.max(...vals) / 3000);
+  const max = step * 3 * 1000;
   const x = i => ml + iw * i / (Q.length - 1);
   const y = v => mt + ih * (1 - v / max);
   const line = Q.map((q, i) => `${x(i).toFixed(1)},${y(PT[q]).toFixed(1)}`).join(' ');
@@ -691,8 +700,8 @@ function renderChart() {
     aria-label="${T('chartTitle')}">`;
   for (let g = 0; g <= 3; g++) {
     const v = max * g / 3;
-    s += `<line class="gl" x1="${ml}" y1="${y(v).toFixed(1)}" x2="${W - mr}" y2="${y(v).toFixed(1)}"/>`;
-    s += `<text x="${ml - 5}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end">${(v / 1000).toFixed(0)}</text>`;
+    s += `<line class="${g ? 'gl' : 'ax'}" x1="${ml}" y1="${y(v).toFixed(1)}" x2="${W - mr}" y2="${y(v).toFixed(1)}"/>`;
+    s += `<text x="${ml - 6}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end">${(v / 1000).toFixed(0)}</text>`;
   }
   s += `<polygon class="ar" points="${ml},${mt + ih} ${line} ${W - mr},${mt + ih}"/>`;
   s += `<polyline class="ln" points="${line}"/>`;
@@ -711,13 +720,33 @@ function renderChart() {
     if (qnOf(q) !== 1 || yearOf(q) % 4) return;
     s += `<text x="${x(i).toFixed(1)}" y="${H - 5}" text-anchor="middle">${yearOf(q)}</text>`;
   });
-  const li = Q.length - 1;
-  s += `<circle class="dot" cx="${x(li).toFixed(1)}" cy="${y(PT[Q[li]]).toFixed(1)}" r="2.6"/>`;
-  s += `<text x="${ml + 2}" y="${mt - 1}" text-anchor="start">${T('unitBn')}</text></svg>`;
-  document.getElementById('chartHost').innerHTML = s;
+  const li = Q.length - 1, lv = PT[Q[li]];
+  // Crosshair + hit strips: the same tooltip the grid uses, on the series.
+  s += `<line class="cross" y1="${mt}" y2="${mt + ih}" x1="0" x2="0"/>`;
+  s += `<circle class="hot" r="4" cx="0" cy="0"/>`;
+  const half = iw / (Q.length - 1) / 2;
+  Q.forEach((q, i) => { s += `<rect class="hit" data-q="${q}" data-cx="${x(i).toFixed(1)}"`
+    + ` data-cy="${y(PT[q]).toFixed(1)}" x="${(x(i) - half).toFixed(1)}" y="${mt}"`
+    + ` width="${(half * 2).toFixed(1)}" height="${ih}"/>`; });
+  s += `<circle class="dot" cx="${x(li).toFixed(1)}" cy="${y(lv).toFixed(1)}" r="3.8"/>`;
+  s += `<text class="endlab" x="${(x(li) + 7).toFixed(1)}" y="${(y(lv) + 3.5).toFixed(1)}"`
+    + ` text-anchor="start">${(lv / 1000).toFixed(1)}</text>`;
+  s += `<text x="0" y="${mt - 5}" text-anchor="start">${T('unitBn')}</text></svg>`;
+  host.innerHTML = s;
   document.getElementById('chartTitle').textContent = T('chartTitle');
   document.getElementById('chartHint').textContent = T('chartHint')(Q.length);
+  const cObj2 = DATA.corridors.find(c => c.code === state.corridor);
+  const second = state.corridor !== 'ALL' && !state.measuredOnly && cObj2;
+  document.getElementById('chartLeg').innerHTML = second
+    ? `<span><i></i>${T('dPaid')} · ${T('gradeA')}</span>`
+      + `<span><i class="est"></i>${cname(cObj2)} · ${T('gradeB')}</span>`
+    : '';
 }
+let chartRAF = 0;
+addEventListener('resize', () => {
+  clearTimeout(chartRAF);
+  chartRAF = setTimeout(renderChart, 160);
+});
 
 /* ── render: province map ─────────────────────────────────────────────
    Where the money leaves from. Work-permit holders by province, from the DOE
@@ -1075,15 +1104,33 @@ function showProvTip(code, ev) {
   tip.style.top = Math.min(innerHeight - r.height - 10, ev.clientY + 14) + 'px';
 }
 
+function markChart(hit) {
+  const svg = hit.ownerSVGElement;
+  const cross = svg.querySelector('.cross'), hot = svg.querySelector('.hot');
+  if (cross) { cross.setAttribute('x1', hit.dataset.cx); cross.setAttribute('x2', hit.dataset.cx);
+    cross.style.visibility = 'visible'; }
+  if (hot) { hot.setAttribute('cx', hit.dataset.cx); hot.setAttribute('cy', hit.dataset.cy);
+    hot.style.visibility = 'visible'; }
+}
+function hideChartMark() {
+  document.querySelectorAll('svg.chart .cross, svg.chart .hot')
+    .forEach(el => { el.style.visibility = 'hidden'; });
+}
 document.addEventListener('mousemove', e => {
-  if (!e.target.closest) { tip.classList.remove('on'); return; }
+  if (!e.target.closest) { tip.classList.remove('on'); hideChartMark(); return; }
   const cell = e.target.closest('.cell[data-q]');
-  if (cell) { showTip(cell.dataset.q, e); return; }
+  if (cell) { hideChartMark(); showTip(cell.dataset.q, e); return; }
+  const hit = e.target.closest('svg.chart rect.hit');
+  if (hit) { markChart(hit); showTip(hit.dataset.q, e); return; }
+  hideChartMark();
   const path = e.target.closest('svg.map path[data-p]');
   if (path) { showProvTip(path.dataset.p, e); return; }
   tip.classList.remove('on');
 });
-document.addEventListener('mouseleave', () => tip.classList.remove('on'));
+document.addEventListener('mouseleave', () => { tip.classList.remove('on'); hideChartMark(); });
 
 readHash();
+// Open on the most recent quarter that carries a figure, so the detail panel
+// arrives with something in it instead of an instruction.
+if (!state.sel) state.sel = Q.slice().reverse().find(q => PT[q] != null) || null;
 renderAll();
