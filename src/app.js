@@ -1,3 +1,9 @@
+/* Everything below runs inside a closure. The libraries arrive as classic
+   scripts and share the global lexical scope, so a top-level `const T` here
+   collided with three.js's own minified `T`. One named export is enough. */
+(function () {
+'use strict';
+
 /* ── Mekong Remittance Corridors ─────────────────────────────────────
    Everything the reader sees is derived here from the embedded dataset.
    The corridor split is a model, so it is computed in the browser: the
@@ -13,15 +19,13 @@ const qi = {}; Q.forEach((q, i) => qi[q] = i);
 const yearOf = q => +q.slice(0, 4), qnOf = q => +q.slice(5);
 
 /* ── language ────────────────────────────────────────────────────────
-   English is the default; a Thai or Korean browser starts in its own
-   language. Every visible string lives in this table.                 */
-const I18N = {
-en: {
-  htmlLang: 'en',
+   Every visible string lives in this table, so nothing is stranded in the
+   markup where it cannot be found again.                              */
+const STR = {
   stamp: 'data',
   h1: 'Thailand pays out. Where does it land, and when?',
   dek: 'Millions of people from Myanmar, Cambodia, Laos and Viet Nam work in Thailand and send money home. This page follows that money using two public records: the Bank of Thailand’s quarterly total for money individuals send abroad, and the labour ministry’s monthly count of foreign work permits, province by province. <b>How much leaves Thailand, and when in the year, is measured.</b> How much goes to each country is an <b>estimate</b> — and every number here says which of the two it is.',
-  fCorridor: 'corridor', fMetric: 'metric', fGrade: 'evidence', fLang: 'language',
+  fCorridor: 'corridor', fMetric: 'metric', fGrade: 'evidence',
   fAssume: 'Assumptions behind the corridor split',
   all: 'Thailand, all destinations',
   mSi: 'Seasonal index', mLevel: 'Flow per quarter', mShare: 'Corridor share',
@@ -97,173 +101,9 @@ en: {
   mapHint: (n, m, cov, rej, pub) => `Work-permit holders by province, ${m}. ${n} of 77 provinces carry a figure. These tables cover four of the permit categories, not all of them, so the province sum reaches ${cov} of the national count by nationality — the remainder sits in categories the report does not break down by province. ${pub} month${pub === 1 ? '' : 's'} reconcile closely enough to publish and ${rej} were rejected; the reasons are in the source table above. The slider moves inside that set, and change is only ever measured against the first month of the same run.`,
   medianRow: 'median',
   none: '—', noRun: 'no usable run',
-},
-th: {
-  htmlLang: 'th',
-  stamp: 'ข้อมูล',
-  h1: 'เงินออกจากไทย ไปที่ใด และเมื่อไร',
-  dek: 'คนหลายล้านคนจากเมียนมา กัมพูชา ลาว และเวียดนาม ทำงานในประเทศไทยและส่งเงินกลับบ้าน หน้านี้ติดตามเงินก้อนนั้นด้วยข้อมูลสาธารณะสองชุด คือ ยอดเงินที่บุคคลส่งออกนอกประเทศรายไตรมาสของธนาคารแห่งประเทศไทย และจำนวนใบอนุญาตทำงานของคนต่างด้าวรายเดือนแยกรายจังหวัดของกระทรวงแรงงาน <b>ยอดที่ออกจากไทยและช่วงเวลาในรอบปี เป็นค่าที่วัดได้</b> ส่วนการแบ่งว่าไปประเทศใดเท่าไร เป็น <b>ค่าประมาณ</b> และทุกตัวเลขในหน้านี้ระบุว่าตนเป็นอย่างไหน',
-  fCorridor: 'เส้นทาง', fMetric: 'ตัวชี้วัด',
-  fGrade: 'ชั้นของข้อมูล', fLang: 'ภาษา',
-  fAssume: 'ข้อสมมติของการแยกเส้นทาง',
-  all: 'ไทย ทุกปลายทาง',
-  mSi: 'ดัชนีตามฤดูกาล', mLevel: 'มีลค่าต่อไตรมาส',
-  mShare: 'สัดส่วนเส้นทาง', mWorker: 'ต่อคนต่อเดือน',
-  mYoy: 'เทียบปีก่อน',
-  gAll: 'แสดงค่าจำลอง', gMeasured: 'เซพาะค่าที่วัดได้',
-  roOver: 'อยู่บน', roSheet: 'แผ่นเขียนแบบ', roSheetLabel: 'แผ่น',
-  roQuarter: 'ไตรมาส', roProvince: 'จังหวัด', roCorridor: 'เส้นทาง',
-  roWithheld: '· ระงับไว้',
-  hiddenModelled: 'ซ่อนอยู่ ทุกตัวเลขในแผงนี้เป็นค่าจำลอง มุมมองนี้แสดงเฉพาะสิ่งที่แหล่งข้อมูลระบุโดยตรง',
-  boardSi: 'ดัชนีตามฤดูกาลรายไตรมาส',
-  boardLevel: 'มีลค่ารายไตรมาส',
-  boardShare: 'สัดส่วนเส้นทางรายไตรมาส',
-  boardWorker: 'ต่อคนต่อเดือน',
-  boardYoy: 'การเปลี่ยนแปลงเทียบปีก่อน',
-  chartTitle: 'เงินโอนส่วนบุคคลจ่ายออกต่างประเทศ รายไตรมาส',
-  flowTitle: 'เงินไปที่ไหน',
-  rankTitle: 'อันดับเส้นทาง',
-  ctxTitle: 'ตัวเลขที่ประเทศปลายทางรายงาน',
-  tblTitle: 'ทุกไตรมาส',
-  tblHint: 'กดหัวคอลัมน์เพื่อเรียง',
-  yearCol: 'ปี', totalCol: 'ปี',
-  legLo: 'ต่ำกว่าแนวโน้ม',
-  legMid: 'สีคือระยะห่างจากแนวโน้ม 4 ไตรมาส',
-  legHi: 'สูงกว่าแนวโน้ม',
-  legLoSeq: 'น้อย', legMidSeq: 'สีคือขนาดในชุดนี้', legHiSeq: 'มาก',
-  selected: 'ไตรมาสที่เลือก',
-  emptyDetail: 'เลือกไตรมาสจากตารางเพื่อดูตัวเลขเบื้องหลัง',
-  measuredBanner: 'เปิดโหมดเซพาะค่าที่วัดได้ ค่าแยกเส้นทางเป็นค่าจำลองจึงถูกซ่อนไว้',
-  corridorBanner: q => `ค่าเส้นทางมีเพียงช่วงที่ตารางใบอนุญาตใช้งานต่อเนื่องกันเท่านั้น: ${q}`,
-  windowNote: '○ หน้าต่างเดียว — ใช้ค่าเป็นสี่ไตรมาสหลังสุด',
-  provNote: '· ตัวเลขเบื้องต้น',
-  gradeA: 'วัดได้', gradeB: 'จำลอง',
-  poolLabel: 'สัดส่วนเงินออกจากไทยที่ไป 4 ประเทศนี้',
-  propLabel: c => `${c} — ส่งต่อคน เทียบค่าเปลี่ย`,
-  assumeHint: 'การแยกเส้นทางนำยอดรวมที่วัดได้มาคูณสัดส่วนที่สมมติว่าไป 4 ประเทศนี้ แล้วหารตามสัดส่วนแรงงานแต่ละสัญชาติ คูณด้วยตัวคูณต่อคน ทั้งสองค่าเป็นข้อสมมติ ไม่ใช่ข้อค้นพบ <b>สัดส่วนที่ไป 4 ประเทศนี้สังเกตไม่ได้</b> เพราะดุลการชำระเงินไม่แยกรายประเทศ สี่สัญชาตินี้คิดเป็นราว 9 ใน 10 ของผู้ถือใบอนุญาต แต่มีรายได้ต่อคนต่ำกว่ามาก และผลสำรวจธนาคารโลก/ILO ปี 2567 จากแรงงาน 1,770 คน พบว่าไม่ถึง 15% ส่งเงินผ่านธนาคาร (ลาว 10%) เงินส่วนใหญ่จึงไม่ปรากฏในดุลการชำระเงิน ค่า 0.70 เป็นตัวเลขกลม ไม่ใช่ค่าที่วัดได้ <b>ตัวคูณต่อคนตั้งเป็นกลาง</b> เพราะไม่มีผลสำรวจปัจจุบันที่เผยแพร่ตัวเลขรายสัญชาติเป็นข้อความ',
-  boardHintSi: 'ดัชนีคือค่าไตรมาสหารด้วยค่าเฉลี่ยเคลื่อนที่ 4 ไตรมาสรอบไตรมาสนั้น 1.00 คือตรงแนวโน้ม ทั้งอนุกรมพบว่าไตรมาสที่ 1 สูงสุด ไตรมาสที่ 3 ต่ำสุด — ตรงกันข้ามกับข้อสันนิษฐานเรื่องสงกรานต์ การอ่านรายปีต้องระวัง เพราะวิธีนี้ตัดระดับออกแต่ไม่ตัดการเร่งตัวของการเติบโต ไตรมาสที่ยังไม่มีไตรมาสถัดไปจะเว้นว่างไว้',
-  boardHintOther: 'สีไล่จากค่าน้อยสุดถึงมากสุดในชุดที่แสดง ค่าที่แน่นอนอยู่ในตารางด้านล่าง',
-  identityNote: 'เมื่อตัวคูณต่อคนเท่ากันทุกเส้นทาง ค่าต่อคนจะเท่ากันทั้งหมดโดยโครงสร้างการคำนวณ ไม่ใช่ข้อค้นพบ',
-  workerHint: 'ค่านี้คือค่าจำลองของเส้นทางหารด้วยจำนวนแรงงาน เมื่อตัวคูณเท่ากันผลจะเท่ากันทุกเส้นทางโดยโครงสร้าง',
-  chartHint: n => `อนุกรมที่วัดได้ ${n} ไตรมาส เส้นประคือเส้นทางที่เลือกตามข้อสมมติ`,
-  flowHint: 'ไตรมาสล่าสุดที่มีข้อมูลแรงงานใช้งานได้',
-  rankHint: 'ผลรวมค่าจำลองในช่วงข้อมูลแรงงานล่าสุดที่ใช้ได้',
-  ctxHint: 'เป็นเงินที่แต่ละประเทศรายงานว่ารับจากทั้งโลก ไม่ใช่จากไทยเท่านั้น',
-  cols: ['ไตรมาส', 'จ่ายออก', 'ดัชนีฤดูกาล', 'แรงงาน', 'สัดส่วน', 'ค่าจำลอง', 'ต่อคน'],
-  unitMB: 'ล้านบาท', unitBn: 'พันล้านบาท',
-  workers: 'คน', regime: 'ช่วง',
-  dPaid: 'จ่ายออกทุกปลายทาง', dSi: 'ดัชนีฤดูกาล',
-  dShare: 'สัดส่วนใน 4 ประเทศ', dFlow: 'ค่าเส้นทางจำลอง',
-  dWorkers: 'ใบอนุญาตคงเหลือ', dWorker: 'ต่อคนต่อเดือน',
-  dYoy: 'เทียบปีก่อน', dRegime: 'ช่วงข้อมูล',
-  ab: ['หน้านี้คืออะไร', 'การแยกเส้นทางทำอย่างไร', 'แหล่งข้อมูล และสิ่งที่ไม่ได้มา', 'ข้อควรระวังในการอ่าน'],
-  festTh: 'สงกรานต์', festQ2: 'ปีใหม่',
-  festPchum: 'ปจุมเบิน', festTet: 'เติ๊ต',
-  festThad: 'ออกพรรษา (เมียนมา)', festLao: 'ธาตหลวง',
-  fPeak: 'ไตรมาสที่สูงสุด', fTrough: 'ต่ำสุด', fLargest: 'เส้นทางใหญ่สุด',
-  fSince2016: 'ไตรมาสสูงสุด ตั้งแต่ 2559', fQuarters: 'ไตรมาสที่วัดได้',
-  mapTitle: 'เงินออกจากจังหวัดใด',
-  mChangeProv: 'เปลี่ยนแปลงในช่วง', monthLabel: 'เดือน', monthsWord: n => `${n} เดือน`,
-  mMassing: 'ทรงสามมิติ',
-  massNote: 'เลื่อนหน้าจอแล้วผังจะเอนลงเป็นภาพสามมิติ และแต่ละจังหวัดจะยกแท่งขึ้น ความสูงคือค่าเดียวกับที่สีแสดง ปิดได้หากต้องการผังแบน',
-  legFell: 'ลดลง', legRose: 'เพิ่มขึ้น',
-  mWorkersProv: 'ใบอนุญาตทำงาน', mShareProv: 'สัดส่วนในจังหวัด',
-  mapHint: (n, m, cov, rej, pub) => `จำนวนผู้ถือใบอนุญาตทำงานรายจังหวัด ${m} มีข้อมูล ${n} จาก 77 จังหวัด ตารางเหล่านี้ครอบคลุมสี่ประเภทใบอนุญาต ไม่ใช่ทั้งหมด ผลรวมรายจังหวัดจึงเท่ากับ ${cov} ของยอดรวมระดับชาติ แสดง ${pub} เดือน และตัดออก ${rej} เดือน การเปรียบเทียบทำเฉพาะภายในช่วงข้อมูลเดียวกัน`,
-  medianRow: 'มัธยฐาน',
-  none: '—', noRun: 'ไม่มีช่วงที่ใช้ได้',
-},
-ko: {
-  htmlLang: 'ko',
-  stamp: '데이터',
-  h1: '태국에서 나가는 돈은 어디로, 언제 가는가',
-  dek: '미얀마·캄보디아·라오스·베트남에서 온 수백만 명이 태국에서 일하며 고향으로 돈을 보낸다. 이 페이지는 공개 자료 두 가지로 그 돈을 따라간다 — 개인이 국외로 보낸 금액을 집계한 태국중앙은행 분기 통계, 그리고 노동부가 매달 주(州)별로 세는 외국인 노동허가 수. <b>태국에서 얼마가 나가는지, 한 해 중 언제 나가는지는 실측이다.</b> 그중 어느 나라로 얼마가 가는지는 <b>추정</b>이고, 이 페이지의 모든 숫자는 자기가 둘 중 어느 쪽인지 밝힌다.',
-  fCorridor: '코리도', fMetric: '지표', fGrade: '근거', fLang: '언어',
-  fAssume: '코리도 배분에 쓰인 가정',
-  all: '태국 전체',
-  mSi: '계절지수', mLevel: '분기 규모', mShare: '코리도 점유율',
-  mWorker: '1인당 월 송금', mYoy: '전년 대비',
-  gAll: '모형치 표시', gMeasured: '실측만',
-  roOver: '위치', roSheet: '제도 용지', roSheetLabel: '시트',
-  roQuarter: '분기', roProvince: '주', roCorridor: '코리도',
-  roWithheld: '· 보류됨',
-  hiddenModelled: '숨김. 이 패널의 모든 수치는 모형치이고, 이 보기는 출처가 직접 밝힌 것만 보여준다.',
-  boardSi: '분기별 계절지수', boardLevel: '분기별 규모', boardShare: '분기별 코리도 점유율',
-  boardWorker: '1인당 월 송금', boardYoy: '전년 대비 증감',
-  chartTitle: '대외 개인이전 지급, 분기',
-  flowTitle: '어디로 가는가', rankTitle: '코리도 순위 (모형치)',
-  ctxTitle: '수취국이 보고하는 값',
-  tblTitle: '전체 분기', tblHint: '열 제목을 눌러 정렬',
-  yearCol: '연도', totalCol: '연도',
-  legLo: '추세 이하', legMid: '색은 4분기 추세와의 거리', legHi: '추세 이상',
-  legLoSeq: '작음', legMidSeq: '색은 계열 내 크기', legHiSeq: '큼',
-  selected: '선택한 분기',
-  emptyDetail: '격자에서 분기를 선택하면 그 셀을 만든 수치를 볼 수 있다.',
-  measuredBanner: '실측만 보기가 켜져 있다. 코리도 배분은 모형이므로 숨겼다 — 남은 것이 공개 통계가 직접 말하는 전부다.',
-  corridorBanner: q => `코리도 수치는 노동허가 통계에 연속 구간이 있는 곳에만 존재한다: ${q}. 나머지는 의도적으로 비워 두었다.`,
-  windowNote: '○ 편측 구간 — 이후 분기가 아직 없어 직전 4분기를 추세로 사용',
-  provNote: '· 원자료 잠정치',
-  gradeA: '실측', gradeB: '모형',
-  poolLabel: '태국 유출액 중 이 4개국으로 가는 비중',
-  propLabel: c => `${c} — 1인당 송금액, 평균 대비`,
-  assumeHint: '코리도 배분은 실측 전국 유출액에 이 4개국으로 간다고 가정한 비중을 곱하고, 그것을 국적별 노동허가 인구 비중으로 나눈 뒤 1인당 계수를 곱한 것이다. 둘 다 발견이 아니라 가정이다. <b>풀 비중은 관측할 수 없다</b> — 국제수지에 국가별 분해가 없다 — 그리고 서로 반대 방향의 힘이 둘 있다. 이 4개 국적은 전체 노동허가 보유자의 약 10분의 9지만 1인당 소득은 나머지 10분의 1보다 훨씬 낮고, 2024년 World Bank/ILO의 1,770명 서베이는 그중 <b>15% 미만만 은행 송금</b>을 쓴다고(라오스는 10%) 보고한다. 즉 이들이 보내는 돈의 상당 부분은 애초에 국제수지에 잡히지 않는다. 0.70은 그 두 힘 사이의 둥근 수치이지 측정값이 아니다. <b>1인당 계수는 중립으로 둔다.</b> 국적별 금액을 본문으로 공표한 최신 서베이가 없기 때문이다 — 2024년 서베이는 차트로만 싣고, 본문으로 싣는 유일한 자료는 2010년 ILO 보고서(2년간 중위 미얀마 약 30,000바트 대 캄보디아 20,000바트)인데 그 순서조차 2024년 서베이가 이미 바뀌었다고 말한다. 두 값을 움직여 답이 얼마나 거기에 의존하는지 보라.',
-  boardHintSi: '지수는 해당 분기를 그 주위 중심 4분기 평균으로 나눈 값이다. 1.00은 그 분기가 자기 국지 추세에 정확히 놓였다는 뜻이다. 전체 계열로 보면 1분기가 가장 강하고 3분기가 가장 약하다 — 송끄란 중심 서사가 예측하는 것과 정반대이며, 격자 맨 아래 중위수 행이 그 요약이다. 단일 연도는 조심해서 읽어야 한다: 이 나눗셈은 수준은 제거하지만 성장률의 변화는 제거하지 못하므로, 2024·2025년 후반부는 계절이 아니라 가속 때문에 위로 밀린다. 후속 분기가 아직 없는 칸은 중심 구간이 존재하지 않으므로 비워 둔다.',
-  boardHintOther: '색은 화면에 표시된 계열의 최소값부터 최대값까지다. 정확한 수치는 하단 표에 있다.',
-  identityNote: '1인당 계수를 모두 같은 값으로 두는 동안 1인당 수치는 네 코리도가 동일하다 — 발견이 아니라 송금 행태에 차이를 가정하지 않은 데서 나오는 산술적 결과다. 계수를 벌려야 의미가 생긴다.',
-  workerHint: '모형 코리도 규모를 해당 코리도의 노동허가 수로 나눈 값이다. 1인당 계수가 같으면 구조상 모든 코리도에서 같은 값이 나오며, 계수를 벌릴 때만 갈라진다.',
-  chartHint: n => `실측 계열 ${n}분기. 점선은 현재 가정 하의 선택 코리도.`,
-  flowHint: '노동허가 수치가 유효한 가장 최근 분기. 폭은 모형치이므로 슬라이더에 따라 움직인다.',
-  rankHint: '노동허가 통계의 가장 최근 유효 구간에 대한 모형 규모 합계.',
-  ctxHint: '각국이 전 세계로부터 받았다고 보고하는 송금액이다. 태국발만이 아니다. 모형 코리도값을 독립적인 값과 비교하기 위해 표시한다.',
-  cols: ['분기', '대외 지급', '계절지수', '노동자', '점유율', '모형 규모', '1인당'],
-  unitMB: '백만밧', unitBn: '십억밧', workers: '명', regime: '구간',
-  dPaid: '대외 지급 전체', dSi: '계절지수', dShare: '4개국 내 점유율',
-  dFlow: '모형 코리도 규모', dWorkers: '보유 노동허가', dWorker: '1인당 월 송금',
-  dYoy: '전년 동기 대비', dRegime: '원자료 구간',
-  ab: ['이 페이지는 무엇인가', '코리도 배분은 어떻게 만들었는가', '출처, 그리고 얻지 못한 것', '오독하지 않고 읽는 법'],
-  festTh: '송끄란', festQ2: '설', festPchum: '프춤번', festTet: '뗏',
-  festThad: '더딘쭈', festLao: '탓루앙',
-  fPeak: '가장 강한 분기', fTrough: '가장 약한', fLargest: '최대 코리도',
-  fSince2016: '가장 강한 분기, 2016년 이후', fQuarters: '측정 분기',
-  mapTitle: '돈이 어디서 나가는가',
-  mChangeProv: '구간 내 변화', monthLabel: '월', monthsWord: n => `${n}개월`,
-  mMassing: '입체',
-  massNote: '스크롤하면 평면도가 뒤로 누워 축측투상이 되고, 주마다 기둥이 올라온다. 높이는 색이 담고 있는 것과 같은 실측값이다 — 색조 대신 높이로 읽는다. 끄면 평면도로 유지된다.',
-  legFell: '감소', legRose: '증가',
-  mWorkersProv: '노동허가', mShareProv: '주 내 점유율',
-  mapHint: (n, m, cov, rej, pub) => `주별 노동허가 보유자, ${m}. 77개 주 중 ${n}개에 수치가 있다. 이 표들은 허가 유형 전체가 아니라 네 가지만 담으므로 주별 합계는 국적별 전국 집계의 ${cov} 수준이다 — 나머지는 보고서가 주별로 분해하지 않는 유형에 있다. ${pub}개월이 대조를 통과해 실렸고 ${rej}개월은 기각했다. 이유는 위 출처 표에 있다. 슬라이더는 그 범위 안에서만 움직이며, 변화는 항상 같은 구간의 첫 달과 비교한다.`,
-  medianRow: '중위수',
-  none: '—', noRun: '유효 구간 없음',
-},
 };
-['th', 'ko'].forEach(l => {                 // fall back to English, never blank
-  Object.keys(I18N.en).forEach(k => { if (I18N[l][k] === undefined) I18N[l][k] = I18N.en[k]; });
-});
-I18N.th.ab1 = I18N.en.ab1; I18N.th.ab2 = I18N.en.ab2; I18N.th.ab4 = I18N.en.ab4;
-I18N.ko.ab1 = [
-  '태국은 순 송금 유출국이다. 국제수지는 나가는 돈을 <b>개인이전</b>으로 기록한다 — 가계에서 가계로 가는 돈, 즉 미얀마·캄보디아·라오스·베트남 이주노동자의 임금이 고향으로 가는 경로다. 태국은행은 이 항목을 분기로 공표하며, 이 페이지에서 측정되고 전국 단위이며 모호하지 않은 유일한 숫자다.',
-  '여기에 고용부의 월간 노동허가 집계 — 국적별, 그리고 지도의 근거가 되는 주별 — 과 4개 수취국이 보고하는 유입액을 붙인다. 이것들로 태국 유출액이 코리도별로 어떻게 갈리는지 추정하고, 그 추정치가 나타나는 모든 곳에 추정임을 표시한다.',
-  '<b>할 수 없는 것:</b> 비공식 채널 측정, 코리도 가격 산정, 월별 값 제시. 손으로 들고 가거나 훈디로 움직인 돈은 국제수지에 들어오지 않으므로, 이 페이지의 모든 규모는 <b>공식 채널</b> 값이며 실제보다 적게 잡힌 값이다.'];
-I18N.ko.ab2 = [
-  '세 단계이며, 실측인 것은 첫 단계뿐이다.',
-  '<b>1 — 전국 유출액.</b> 태국은행 2차소득 지급 항목 2.1 개인이전. 분기, 백만밧, 2005년부터. 공표값 그대로 사용.',
-  '<b>2 — 풀.</b> 국제수지에 국가별 분해가 없으므로, 그 유출액 중 이 4개국으로 가는 비중은 슬라이더로 설정하는 가정이다. 어떤 공개 출처로도 관측할 수 없다.',
-  '<b>3 — 배분.</b> 각 코리도는 풀 × 노동허가 인구 점유율 × 1인당 계수를 받는다. 점유율은 노동허가 통계에서 오고, 계수의 기본값은 1.00 — 송금 행태에 차이를 가정하지 않는다는 뜻이다.',
-  '계절지수는 해당 분기를 주위 중심 4분기 평균으로 나눈 값이다. 전국 계열에 적용하면 실측이다. 코리도에 적용하면 모형을 물려받으며, 원자료 표의 한 구간 안에서만 계산한다 — 구간 경계를 넘지 않는다. 경계는 이주의 변화가 아니라 표가 세는 대상의 변화이기 때문이다.'];
-I18N.ko.ab4 = [
-  '<b>노동허가 집계는 이주 시계열이 아니다.</b> 내각결의로 등록 창구가 열릴 때마다, 또는 보고서가 출력하는 열이 바뀔 때마다 수준이 계단식으로 뛰며, 단위도 중간에 "직위"에서 "명"으로 바뀌었다. 이 페이지는 그런 단절마다 계열을 구간으로 자르고 이어붙이지 않는다. 그 계열의 큰 움직임은 사람이 아니라 정책이다.',
-  '<b>가장 최근 구간에서 미얀마는 과소 계상된다.</b> 2025년 5월부터 원자료 표는 진행 중인 갱신 건 — 약 180만 명, 거의 전부 미얀마 국적 — 을 싣지 않는다. 따라서 그 구간의 코리도 점유율은 미얀마를 낮게, 나머지를 높게 잡는다.',
-  '<b>계절성이 분기 단위인 것은 선택이 아니라 한계다.</b> 월간 국제수지 표는 서비스·본소득·2차소득을 한 줄로 합산해 발표하므로 개인이전을 월별로 분리할 수 없다. 월간 코리도 계열은 만들어내야만 하는 것이어서 제시하지 않는다.',
-  '<b>축제 표시는 주석이며 투입값이 아니다.</b> 정렬을 직접 판단할 수 있도록 분기에 표시만 했다. 이를 추정에 넣고 그 결과를 축제가 송금을 움직인다는 근거로 읽으면 순환논증이므로 계산에서 제외했다.',
-  '<b>이 돈의 상당 부분은 애초에 국제수지에 들어오지 않는다.</b> 2024년 World Bank/ILO의 CLM 이주노동자 1,770명 서베이는 그중 15% 미만만 은행 송금을 쓴다고 — 라오스는 10% — 보고한다. 나머지 대부분은 훈디(hundi)이거나 직접 들고 가는 현금이다. 태국중앙은행 계열은 공식 시스템을 거친 이전만 센다. 따라서 이 페이지의 \'태국에서 얼마가 나가는가\'는 기록된 경로로 나간 금액을 뜻하며, 실제 흐름은 아무도 측정하지 못한 만큼 더 크다.',
-  '<b>같은 보고서를 두 가지로 읽은 결과가 서로 맞아야 한다.</b> 전국 국적별 집계와 주별 표는 같은 월간 PDF에서 나오지만 서로 다른 표이고, 서로 다른 코드가 읽는다. 이 둘이 5분의 1 넘게 어긋나면 그 달은 발행하지 않고 보류한다 — 둘 중 하나가 틀린 것인데 어느 쪽인지 늘 분명하지는 않다. 일부 분기에 전국 규모는 있는데 코리도 배분이 아예 없는 이유가 이것이다.',
-  '<b>등록 노동자만 포함된다.</b> 미등록 노동자는 분모에서 빠지므로 1인당 값이 위로 편향된다.'];
-
-let LANG = (() => {
-  const l = (navigator.language || 'en').toLowerCase();
-  return l.startsWith('th') ? 'th' : l.startsWith('ko') ? 'ko' : 'en';
-})();
-const T = k => I18N[LANG][k] !== undefined ? I18N[LANG][k] : I18N.en[k];
-const cname = c => c[LANG] || c.en;
+const T = k => STR[k];
+const cname = c => c.en;
 
 /* ── state, kept in the URL so a view can be sent to someone ───────── */
 const METRICS = ['si', 'level', 'share', 'worker', 'yoy'];
@@ -278,7 +118,6 @@ function readHash() {
   if (p.get('c')) state.corridor = p.get('c');
   if (METRICS.includes(p.get('m'))) state.metric = p.get('m');
   if (p.get('g') === 'm') state.measuredOnly = true;
-  if (p.get('lang') && I18N[p.get('lang')]) LANG = p.get('lang');
   if (p.get('pool')) state.pool = Math.min(1, Math.max(0.2, +p.get('pool') || 0.7));
   NATS.forEach(n => { const v = p.get('p' + n); if (v) state.prop[n] = Math.min(2, Math.max(0.4, +v || 1)); });
   if (p.get('q')) state.sel = p.get('q');
@@ -293,7 +132,6 @@ function writeHash() {
   if (state.corridor !== 'ALL') p.set('c', state.corridor);
   if (state.metric !== 'si') p.set('m', state.metric);
   if (state.measuredOnly) p.set('g', 'm');
-  if (LANG !== 'en') p.set('lang', LANG);
   if (state.pool !== 0.7) p.set('pool', state.pool.toFixed(2));
   NATS.forEach(n => { if (state.prop[n] !== 1) p.set('p' + n, state.prop[n].toFixed(2)); });
   if (state.sel) p.set('q', state.sel);
@@ -483,8 +321,6 @@ function renderControls() {
   document.getElementById('gChips').innerHTML =
     chip(T('gAll'), !state.measuredOnly, 'data-g="all"') +
     chip(T('gMeasured'), state.measuredOnly, 'data-g="m"');
-  document.getElementById('lChips').innerHTML =
-    ['en', 'th', 'ko'].map(l => chip(l.toUpperCase(), LANG === l, `data-lang="${l}"`)).join('');
 
   const rows = [`<div class="w"><label>${T('poolLabel')}</label><div class="r">
       <input type="range" min="20" max="100" step="1" value="${Math.round(state.pool * 100)}" data-pool>
@@ -495,7 +331,7 @@ function renderControls() {
   document.getElementById('agrid').innerHTML = rows.join('');
   document.getElementById('lAssume').textContent = T('fAssume');
   document.getElementById('lAssumeHint').innerHTML = T('assumeHint');
-  ['lCorridor:fCorridor', 'lMetric:fMetric', 'lGrade:fGrade', 'lLang:fLang'].forEach(p => {
+  ['lCorridor:fCorridor', 'lMetric:fMetric', 'lGrade:fGrade'].forEach(p => {
     const [id, key] = p.split(':');
     document.getElementById(id).textContent = T(key);
   });
@@ -869,10 +705,224 @@ function onMassScroll() {
     applyMass();
   });
 }
-addEventListener('load', () => { massP = massTarget(); applyMass(); });
-addEventListener('scroll', onMassScroll, {passive: true});
-addEventListener('resize', onMassScroll, {passive: true});
+/* Smooth scroll and the scrub that drives the drawing. Both are progressive:
+   if GSAP or Lenis fail to arrive the native scroll listener below still runs
+   the massing, so the page degrades to what it did before they existed. */
+let lenis = null, scrollReady = false;
+
+/* Lenis arrives as a module, so it may land before or after the load handler.
+   Both paths call this and it only ever attaches once. */
+function attachLenis() {
+  if (lenis || typeof Lenis === 'undefined' || reduceMotion.matches) return;
+  lenis = new Lenis({duration: 1.05, smoothWheel: true, wheelMultiplier: 0.9});
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  }
+}
+
+function initScroll() {
+  if (scrollReady) return;
+  scrollReady = true;
+  const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+  attachLenis();
+  if (hasGsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    // One scrub over the panel's travel: the same scalar the hand-rolled
+    // driver produced, but frame-synced to the smoothed scroll instead of
+    // sampled from it.
+    ScrollTrigger.create({
+      trigger: '#mapPanel', start: 'top 92%', end: 'top 34%', scrub: true,
+      onUpdate: st => { massP = st.progress; applyMass(); onGlScroll(st.progress); },
+      onEnter: primeGl, onEnterBack: primeGl,
+    });
+    ScrollTrigger.create({trigger: '#mapPanel', start: 'top bottom', onEnter: primeGl});
+  } else {
+    addEventListener('scroll', onMassScroll, {passive: true});
+    addEventListener('resize', onMassScroll, {passive: true});
+    const near = () => { const r = document.getElementById('mapPanel');
+      if (r && r.getBoundingClientRect().top < innerHeight * 1.6) primeGl(); };
+    addEventListener('scroll', near, {passive: true});
+    near();
+  }
+  massP = massTarget(); applyMass();
+}
+addEventListener('load', initScroll);
 reduceMotion.addEventListener('change', applyMass);
+
+/* ── the extruded drawing ───────────────────────────────────────────────
+   The SVG plan is the base and the fallback. When the sheet is approached,
+   three.js is fetched once and the same provinces are extruded as prisms
+   whose height is the metric already on screen -- so the 3D adds depth to a
+   reading rather than a second, different one. Orthographic, because this is
+   an axonometric drawing and parallel lines have to stay parallel. */
+// r149 is the last release whose UMD build is supported: r150 deprecates it
+// and r160 warns that it is being removed. Pinned, not floating.
+const GL_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js';
+let GL = null, glPending = false, glFailed = false;
+
+function primeGl() {
+  if (GL || glPending || glFailed || reduceMotion.matches) return;
+  if (!document.createElement('canvas').getContext('webgl')) { glFailed = true; return; }
+  glPending = true;
+  const sc = document.createElement('script');
+  sc.src = GL_SRC;
+  sc.onload = () => { glPending = false; try { buildGl(); } catch (e) { glFailed = true; } };
+  sc.onerror = () => { glPending = false; glFailed = true; };
+  document.head.appendChild(sc);
+}
+
+function glShapes() {
+  // Reuse the plan's own projection so the prisms sit exactly where the
+  // choropleth does, then centre on the drawing's middle.
+  const P = buildPaths();
+  const W = +P.w, H = +P.h;
+  const geo = PV.geo || [];
+  const ringOf = r => {
+    const sh = new THREE.Shape();
+    r.forEach((c, i) => {
+      const x = P.proj[0](c) - W / 2, y = -(P.proj[1](c) - H / 2);
+      i ? sh.lineTo(x, y) : sh.moveTo(x, y);
+    });
+    return sh;
+  };
+  return geo.map(f => {
+    const polys = f.t === 'Polygon' ? [f.g] : f.g;
+    const shapes = polys.map(pg => {
+      const outer = ringOf(pg[0]);
+      pg.slice(1).forEach(h => outer.holes.push(new THREE.Path(ringOf(h).getPoints())));
+      return outer;
+    });
+    return {code: f.c, shapes};
+  });
+}
+
+function buildGl() {
+  const host = document.getElementById('mapHost');
+  if (!host) return;
+  const P = buildPaths();
+  const W = +P.w, H = +P.h;
+  const box = host.getBoundingClientRect();
+  const size = Math.max(320, Math.min(470, box.width || 470));
+
+  const V = H + MASS_HEAD;                 // the SVG reserves the same headroom
+  const scene = new THREE.Scene();
+  const cam = new THREE.OrthographicCamera(-W / 2, W / 2, V / 2, -V / 2, -4000, 4000);
+  const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+  renderer.setSize(size, size * V / W, false);
+  renderer.setClearAlpha(0);
+  host.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.86));
+  const key = new THREE.DirectionalLight(0xffffff, 0.62);
+  key.position.set(-0.45, 1, 0.75);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.22);
+  fill.position.set(0.6, 0.3, -0.5);
+  scene.add(fill);
+
+  const root = new THREE.Group();
+  scene.add(root);
+  const meshes = {};
+  glShapes().forEach(({code, shapes}) => {
+    const g = new THREE.ExtrudeGeometry(shapes, {depth: 1, bevelEnabled: false});
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({color: 0xcccccc}));
+    m.userData.code = code;
+    meshes[code] = m;
+    root.add(m);
+  });
+
+  GL = {scene, cam, renderer, root, meshes, size, W, H, V};
+  host.classList.add('gl');
+  paintGl();
+  onGlScroll(massP);
+  wireGlPointer();
+}
+
+/* Colour and height come from the same numbers the choropleth uses, so the
+   two layers can never disagree. */
+function paintGl() {
+  if (!GL) return;
+  const snap = PV.months[mapMonth];
+  const base = runBase(mapMonth);
+  const baseSnap = base ? PV.months[base] : null;
+  if (!snap) return;
+  const vals = [];
+  const by = {};
+  Object.keys(PV_BY_CODE).forEach(code => {
+    const v = provValue(code, snap, baseSnap);
+    by[code] = v;
+    if (v != null) vals.push(v);
+  });
+  const diverging = mapMetric === 'change';
+  const spread = (() => { const a = vals.map(Math.abs).sort((x, y) => x - y);
+    return a.length ? Math.max(0.02, a[Math.min(a.length - 1, Math.round(0.9 * (a.length - 1)))]) : 0.1; })();
+  const edges = [-spread, -spread / 3, spread / 3, spread];
+  const bin = diverging ? (v => 1 + edges.filter(e => v > e).length)
+                        : binner('level', vals);
+  const top1 = vals.length ? Math.max(...vals.map(Math.abs)) : 1;
+  const css = getComputedStyle(document.documentElement);
+  const pal = diverging ? 'd' : 's';
+  const tone = n => new THREE.Color(css.getPropertyValue('--' + pal + n).trim() || '#cccccc');
+  const nodata = new THREE.Color(css.getPropertyValue('--nodata').trim() || '#dddddd');
+  Object.entries(GL.meshes).forEach(([code, m]) => {
+    const v = by[code];
+    m.material.color = v == null ? nodata : tone(bin(v));
+    m.userData.h = v == null || !top1 ? 1 : Math.max(1, (Math.abs(v) / top1) * MASS_MAX);
+    m.material.needsUpdate = true;
+  });
+  GL.renderer.render(GL.scene, GL.cam);
+}
+
+/* Scroll lays the drawing back and raises the prisms -- the same two moves the
+   SVG makes, in the same range, so switching layers is not a switch of story. */
+function onGlScroll(p) {
+  if (!GL) return;
+  const theta = (Math.PI / 2) * 0.62 * p;
+  GL.root.rotation.x = -theta;
+  // Laying the sheet back foreshortens the plan and turns the prisms' depth
+  // into projected height, so the block the reader sees changes shape as it
+  // rises. Centre that block rather than the plan alone, or the drawing drifts
+  // to the floor of the frame and leaves the headroom empty above it.
+  const rise = MASS_MAX * Math.sin(theta) * p;
+  GL.root.position.y = -rise / 2;
+  GL.root.scale.setScalar(1 + 0.16 * p);   // and push in a little as it stands
+  Object.values(GL.meshes).forEach(m => {
+    m.scale.z = Math.max(0.001, (m.userData.h || 1) * p);
+  });
+  GL.renderer.render(GL.scene, GL.cam);
+}
+
+function wireGlPointer() {
+  const cv = GL.renderer.domElement;
+  const ray = new THREE.Raycaster();
+  const v2 = new THREE.Vector2();
+  const pick = e => {
+    const r = cv.getBoundingClientRect();
+    v2.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    v2.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    ray.setFromCamera(v2, GL.cam);
+    const hit = ray.intersectObjects(Object.values(GL.meshes), false)[0];
+    return hit ? hit.object.userData.code : null;
+  };
+  cv.addEventListener('mousemove', e => {
+    const code = pick(e);
+    cv.style.cursor = code ? 'pointer' : 'default';
+    if (code) showProvTip(code, e); else tip.classList.remove('on');
+  });
+  cv.addEventListener('mouseleave', () => tip.classList.remove('on'));
+  cv.addEventListener('click', e => {
+    const code = pick(e);
+    if (!code) return;
+    state.province = state.province === code ? null : code;
+    renderMap(); writeHash();
+  });
+}
 
 /* ── render: province map ─────────────────────────────────────────────
    Where the money leaves from. Work-permit holders by province, from the DOE
@@ -927,6 +977,7 @@ function buildPaths() {
     return [sx / big.length, sy / big.length];
   };
   MAP_PATHS = {
+    proj: [c => +px(c), c => +py(c)],
     w: ((maxX - minX) * kx * S + pad * 2).toFixed(0),
     h: (H + pad * 2).toFixed(0),
     d: geo.map(f => ({code: f.c, d: f.t === 'Polygon' ? poly(f.g) : f.g.map(poly).join(''),
@@ -1051,6 +1102,7 @@ function renderMap() {
   MASS_EL = {plan: host.querySelector('.plan'),
              cols: [...host.querySelectorAll('.mass > g')]};
   applyMass();
+  if (GL) { host.appendChild(GL.renderer.domElement); paintGl(); onGlScroll(massP); }
 
   const fmtP = v => v == null ? T('none')
     : mapMetric === 'share' ? pct(v, 0)
@@ -1073,7 +1125,7 @@ function renderMap() {
   document.getElementById('provRank').innerHTML = ranked.map((code, i) => `
     <div class="row ${state.province === code ? 'sel' : ''}" data-p="${code}">
       <div class="i">${i + 1}</div>
-      <div class="n">${PV_BY_CODE[code] ? (LANG === 'th' ? PV_BY_CODE[code].th : PV_BY_CODE[code].en) : code}</div>
+      <div class="n">${PV_BY_CODE[code] ? PV_BY_CODE[code].en : code}</div>
       <div class="bar"><i style="width:${Math.max(2, 66 * Math.abs(byCode[code]) / max)}px"></i>
         <span class="v">${fmtP(byCode[code])}</span></div></div>`).join('');
 
@@ -1137,7 +1189,7 @@ function renderAbout() {
     document.getElementById('lAb' + n).textContent = ab[n === 4 ? 3 : n - 1];
     const body = T('ab' + n);
     document.getElementById('ab' + n).innerHTML = body.map(
-      p => `<p${p.startsWith('<b>What it cannot') || p.startsWith('<b>할 수 없는') ? ' class="warn"' : ''}>${p}</p>`).join('');
+      p => `<p${p.startsWith('<b>What it cannot') ? ' class="warn"' : ''}>${p}</p>`).join('');
   });
   document.getElementById('lAb3').textContent = ab[2];
   document.getElementById('ab3').innerHTML =
@@ -1192,9 +1244,7 @@ function showTip(q, ev) {
 
 /* ── wiring ──────────────────────────────────────────────────────────── */
 function paintChrome() {
-  document.documentElement.lang = T('htmlLang');
   // touch only our own classes -- a host page may own others on <body>
-  ['en', 'th', 'ko'].forEach(l => document.body.classList.toggle('lang-' + l, l === LANG));
   document.getElementById('stamp').textContent =
     `${T('stamp')} · ${Q[Q.length - 1]} · ${DATA.meta.built}`;
   document.getElementById('h1').textContent = T('h1');
@@ -1218,7 +1268,6 @@ document.addEventListener('click', e => {
     if (b.dataset.c) state.corridor = b.dataset.c;
     else if (b.dataset.m) state.metric = b.dataset.m;
     else if (b.dataset.g) state.measuredOnly = b.dataset.g === 'm';
-    else if (b.dataset.lang) LANG = b.dataset.lang;
     renderAll();
     return;
   }
@@ -1267,7 +1316,7 @@ function showProvTip(code, ev) {
     return `<tr><td>${cname(c)}</td><td style="text-align:right">${nf(v, 0)}</td>`
       + `<td style="text-align:right;color:var(--ink-3)">${tot ? pct(v / tot, 0) : ''}</td></tr>`;
   }).join('');
-  tip.innerHTML = `<div class="tt">${LANG === 'th' ? p.th : p.en}</div>`
+  tip.innerHTML = `<div class="tt">${p.en}</div>`
     + `<table><tr><td><b>${T('mWorkersProv')}</b></td>`
     + `<td style="text-align:right"><b>${nf(tot, 0)}</b></td><td></td></tr>${rows}</table>`
     + `<div class="fx">${mapMonth} · ${T('gradeA')}</div>`;
@@ -1312,11 +1361,11 @@ function readout(e) {
     if (cell) { kind = T('roQuarter');
       what = cell.dataset.q + (cell.classList.contains('nd') ? '  ' + T('roWithheld') : ''); }
     else if (path) { const pv = PV_BY_CODE[path.dataset.p];
-      kind = T('roProvince'); what = pv ? (LANG === 'th' ? pv.th : pv.en) : path.dataset.p; }
+      kind = T('roProvince'); what = pv ? pv.en : path.dataset.p; }
     else if (row && row.dataset.c) { const c = DATA.corridors.find(x => x.code === row.dataset.c);
       kind = T('roCorridor'); what = c ? cname(c) : row.dataset.c; }
     else if (row && row.dataset.p) { const pv = PV_BY_CODE[row.dataset.p];
-      kind = T('roProvince'); what = pv ? (LANG === 'th' ? pv.th : pv.en) : row.dataset.p; }
+      kind = T('roProvince'); what = pv ? pv.en : row.dataset.p; }
     else if (flow) { kind = T('roCorridor');
       what = (flow.querySelector('.fn') || {}).firstChild
         ? flow.querySelector('.fn').firstChild.textContent.trim() : what; }
@@ -1346,3 +1395,16 @@ readHash();
 // arrives with something in it instead of an instruction.
 if (!state.sel) state.sel = Q.slice().reverse().find(q => PT[q] != null) || null;
 renderAll();
+
+/* The only surface the page needs from outside: the Lenis module hands itself
+   in, and verification can drive the scroll scalar. */
+window.MRC = {
+  attachLenis,
+  primeGl,
+  setMass(p) { massP = p; applyMass(); onGlScroll(p); },
+  get glReady() { return !!GL; },
+  get glState() { return {pending: glPending, failed: glFailed, built: !!GL}; },
+  get scroll() { return {lenis: !!lenis, massP}; },
+  state, DATA,
+};
+})();

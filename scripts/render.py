@@ -15,8 +15,11 @@ for token, payload in (("__DATA__", data), ("__APP__", app)):
         sys.exit(f"template is missing {token}")
     tpl = tpl.replace(token, payload)
 
-# a literal </script> inside the payload would end the block early
-assert tpl.count("</script>") == 1, "payload contains a script terminator"
+# A literal </script> inside either payload would end the inline block early.
+# The template's own library tags are fine; only the injected data and app
+# matter, so they are checked directly rather than by counting the whole file.
+for name, payload in (("dataset", data), ("app", app)):
+    assert "</script" not in payload.lower(), f"{name} contains a script terminator"
 
 os.makedirs(f"{ROOT}/dist", exist_ok=True)
 # GitHub Pages serves the repository root, so the page is written there as well
