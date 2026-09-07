@@ -1,34 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mekong Remittance Corridors</title>
-<meta name="description" content="Millions of workers from Myanmar, Cambodia, Laos and Viet Nam send money home from Thailand. This page follows that money using the Bank of Thailand's quarterly record of money sent abroad by individuals, the Thai labour ministry's monthly work-permit counts by province, and World Bank indicators — marking every number as measured or estimated, with its source and date.">
-<meta name="theme-color" content="#d7dbdc" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f1315" media="(prefers-color-scheme: dark)">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mekong Remittance Corridors">
-<meta property="og:description" content="How much money leaves Thailand for Myanmar, Cambodia, Laos and Viet Nam, when in the year it leaves, and which provinces it leaves from -- with every number marked measured or estimated.">
-<meta property="og:locale" content="en_US">
-<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23f8f9f8"/><rect x="5" y="6" width="22" height="4" fill="%23f5e3ce"/><rect x="5" y="11" width="22" height="4" fill="%23d9945c"/><rect x="5" y="16" width="22" height="4" fill="%23bd6b30"/><rect x="5" y="21" width="22" height="4" fill="%2394420f"/><rect x="1.6" y="1.6" width="28.8" height="28.8" fill="none" stroke="%232c4d61" stroke-width="3.2"/></svg>'>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
-<!-- ฿ (U+0E3F) is not in the Latin Plex cuts, so one subsetted face carries
-     just that glyph rather than a whole Thai family for a currency sign. -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&text=%E0%B8%BF&display=swap">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<!-- Lenis ships no UMD build, so it comes in as a module and hands itself to
-     the page. Order-independent: whichever of this and the load handler runs
-     second finds the other already there. -->
-<script type="module">
-  import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm";
-  window.Lenis = Lenis;
-  if (window.MRC) window.MRC.attachLenis();
-</script>
-<style>
+/* Tailwind supplies layout and spacing utilities for new markup. Everything
+   below is the drafting-paper design system, carried over unchanged from the
+   single-file build: the palette, both themes, the three type roles and the
+   component styles were designed and contrast-checked as one set.
+
+   It sits after the directives and outside any layer on purpose. Preflight
+   should not reset what this establishes, and where a utility and a component
+   style disagree the component style is the one that was measured. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ── tokens ──────────────────────────────────────────────────────────
    Light is the base set; dark is redefined twice so that the OS setting
    and an explicit theme stamp both win in the right direction.        */
@@ -357,11 +338,19 @@ svg.map{display:block;width:100%;max-width:470px;height:auto;margin:0 auto;
 .mapbox{position:relative}
 .mapbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
   pointer-events:auto;opacity:0;transition:opacity .6s}
-.mapbox.gl canvas{opacity:1}
-.mapbox.gl svg.map{opacity:0;pointer-events:none}
+/* The canvas mounts only where WebGL is available and motion is not refused,
+   so its presence is the signal -- no class juggling between the two layers. */
+.mapbox:has(.glwrap) canvas{opacity:1}
+.mapbox:has(.glwrap) svg.map{opacity:0;pointer-events:none}
+/* The wrapper carries the drawing's aspect itself rather than stretching to a
+   sibling: R3F sizes its renderer from this box, and at mount the plan beside
+   it may not have been drawn yet -- which left the canvas at its 300x150
+   default, stretched. */
+.glwrap{position:absolute;top:0;left:0;width:100%;max-width:470px;
+  left:50%;transform:translateX(-50%)}
 @media (prefers-reduced-motion:reduce){
-  .mapbox canvas{display:none}
-  .mapbox.gl svg.map{opacity:1;pointer-events:auto}
+  .mapbox canvas,.glwrap{display:none}
+  .mapbox:has(.glwrap) svg.map{opacity:1;pointer-events:auto}
 }
 svg.map .plan path{stroke:var(--surface);stroke-width:.6;cursor:pointer}
 /* The massing layer: one upright column per province, height carrying the
@@ -471,114 +460,3 @@ td.mod{background-image:repeating-linear-gradient(45deg,
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 a{color:var(--petrol)}
 a:hover{color:var(--ember)}
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<section class="hero">
-  <div class="hbar"><div>By <b>MSK</b></div><div class="lab" id="stamp"></div></div>
-  <h1 id="h1"></h1>
-  <p class="dek" id="dek"></p>
-  <div class="facts" id="facts"></div>
-</section>
-
-<div class="controls">
-  <div class="ctl"><span class="klab" id="lCorridor"></span><div class="chips" id="cChips"></div></div>
-  <div class="ctl"><span class="klab" id="lMetric"></span><div class="chips" id="mChips"></div></div>
-  <div class="ctl"><span class="klab" id="lGrade"></span><div class="chips" id="gChips"></div>
-</div>
-  <details class="asm" id="asmBox">
-    <summary id="lAssume"></summary>
-    <div class="agrid" id="agrid"></div>
-    <p class="hint" id="lAssumeHint"></p>
-  </details>
-</div>
-
-<div class="cols">
-  <div>
-    <div class="panel">
-      <div class="ptitle"><h2 id="boardTitle"></h2><span id="boardGrade"></span></div>
-      <div id="boardBanner"></div>
-      <div class="gridwrap" data-lenis-prevent><div class="qgrid" id="board"></div></div>
-      <div class="legend" id="legend"></div>
-      <div class="legcap"><span id="legLo"></span><span id="legMid"></span><span id="legHi"></span></div>
-      <p class="hint" id="boardHint"></p>
-    </div>
-    <div class="panel">
-      <div class="ptitle"><h2 id="chartTitle"></h2><span class="g gA">A</span></div>
-      <div id="chartHost"></div>
-      <div class="clg" id="chartLeg"></div>
-      <p class="hint" id="chartHint"></p>
-    </div>
-    <div class="panel">
-      <div class="ptitle"><h2 id="flowTitle"></h2><span class="g gB">B</span></div>
-      <div class="flows" id="flows"></div>
-      <p class="hint" id="flowHint"></p>
-    </div>
-  </div>
-  <div>
-    <div class="panel sub"><div id="detail"></div></div>
-    <div class="panel sub">
-      <div class="ptitle"><h2 id="rankTitle"></h2><span class="g gB">B</span></div>
-      <div class="rank" id="rank"></div>
-      <p class="hint" id="rankHint"></p>
-    </div>
-    <div class="panel sub">
-      <div class="ptitle"><h2 id="ctxTitle"></h2><span class="g gA">A</span></div>
-      <div class="rank" id="ctx"></div>
-      <p class="hint" id="ctxHint"></p>
-    </div>
-  </div>
-</div>
-
-<div class="panel" id="mapPanel">
-  <div class="ptitle"><h2 id="mapTitle"></h2>
-    <div class="chips" id="mapChips"></div>
-    <span class="g gA" id="mapGrade">A</span></div>
-  <div class="monthbar" id="monthBar"></div>
-  <div class="mapcols">
-    <div class="mapbox" id="mapHost"></div>
-    <div>
-      <div class="legend" id="mapLegend"></div>
-      <div class="legcap"><span id="mapLegLo"></span><span id="mapLegHi"></span></div>
-      <div class="rank" id="provRank"></div>
-    </div>
-  </div>
-  <p class="hint" id="mapHint"></p>
-</div>
-
-<div class="panel">
-  <div class="ptitle"><h2 id="tblTitle"></h2><span class="lab" id="tblHint"></span></div>
-  <div class="scroll tallscroll" data-lenis-prevent><table id="tbl">
-    <thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody>
-  </table></div>
-</div>
-
-<section class="about">
-  <div class="dirrow"><div class="dirnum">01</div><div class="dircell">
-    <span class="klab" id="lAb1"></span><div id="ab1"></div></div></div>
-  <div class="dirrow"><div class="dirnum">02</div><div class="dircell">
-    <span class="klab" id="lAb2"></span><div id="ab2"></div></div></div>
-  <div class="dirrow"><div class="dirnum">03</div><div class="dircell">
-    <span class="klab" id="lAb3"></span><div id="ab3"></div>
-    <dl class="asof" id="asof"></dl>
-    <div class="scroll" style="margin-top:12px"><table class="srctable" id="srctbl">
-      <thead><tr id="sthead"></tr></thead><tbody id="stbody"></tbody></table></div></div></div>
-  <div class="dirrow"><div class="dirnum">04</div><div class="dircell">
-    <span class="klab" id="lAb4"></span><div id="ab4"></div></div></div>
-</section>
-
-</div>
-<div class="tip" id="tip"></div>
-<div class="rule-out" id="ruleOut" aria-hidden="true">
-  <span><i>X</i> <b id="roX">—</b></span>
-  <span><i>Y</i> <b id="roY">—</b></span>
-  <span class="at"><i id="roLabel">over</i> <b id="roAt">the sheet</b></span>
-</div>
-<script>
-const DATA = __DATA__;
-__APP__
-</script>
-</body>
-</html>

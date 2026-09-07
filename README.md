@@ -154,4 +154,40 @@ python3 scripts/serve.py
   https://minsungkim-source.github.io/LoanTHhitmap/ (originally NSO ArcGIS,
   simplified). No household statistics were carried over from it.
 - The pool share and per-worker factors are assumptions with no public source. They
-  are exposed as sliders rather than buried as constants.
+  are exposed as sliders rather than buried as constants.## How it is built
+
+A Next.js app, exported as static files and deployed to Pages by Actions.
+
+```
+app/            layout, the page shell, the design system stylesheet
+components/     Reader (mounts the reading layer), MapLayer, Massing (R3F)
+lib/            app.js (reading + interaction), store.js (two channels), dataset.js
+scripts/*.py    the data pipeline -- unchanged, still the source of dataset.json
+.github/workflows/pages.yml
+```
+
+`npm run build` produces `out/`. Nothing is fetched at runtime: the dataset is
+imported at build time, and the only network requests are the two Google Fonts
+stylesheets.
+
+**The 3D is split out.** `three` and R3F are about 350 kB of the bundle and a
+reader who never scrolls to the drawing never needs them, so `Massing` is a
+`next/dynamic` import. First Load JS is 227 kB; without the split it was 439.
+
+**The reading layer is one module, not components yet.** `lib/app.js` is the
+interaction code carried over from the single-file build. Every behaviour in it
+— five metrics across five corridors, the evidence toggle, the sixteen-month
+slider, keyboard sorting, the withheld quarters — was verified against the live
+page, and rewriting it as hooks in the same pass as the framework move would
+have meant re-verifying all of it at once. It talks to the R3F component
+through `lib/store.js` rather than reaching into it. Decomposing it is the next
+step; it is not done.
+
+**Deploy cutover.** `index.html` at the repository root is the previous
+single-file build and is what Pages serves today. The workflow uploads `out/`
+instead, which only takes effect once **Settings → Pages → Source** is set to
+**GitHub Actions**. Until then the workflow's deploy step fails harmlessly and
+the old file keeps serving — so the site cannot break mid-migration. Once the
+Actions deploy is live, `index.html` should be deleted.
+
+
