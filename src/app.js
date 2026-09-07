@@ -1,3 +1,9 @@
+/* Everything below runs inside a closure. The libraries arrive as classic
+   scripts and share the global lexical scope, so a top-level `const T` here
+   collided with three.js's own minified `T`. One named export is enough. */
+(function () {
+'use strict';
+
 /* ── Mekong Remittance Corridors ─────────────────────────────────────
    Everything the reader sees is derived here from the embedded dataset.
    The corridor split is a model, so it is computed in the browser: the
@@ -699,10 +705,224 @@ function onMassScroll() {
     applyMass();
   });
 }
-addEventListener('load', () => { massP = massTarget(); applyMass(); });
-addEventListener('scroll', onMassScroll, {passive: true});
-addEventListener('resize', onMassScroll, {passive: true});
+/* Smooth scroll and the scrub that drives the drawing. Both are progressive:
+   if GSAP or Lenis fail to arrive the native scroll listener below still runs
+   the massing, so the page degrades to what it did before they existed. */
+let lenis = null, scrollReady = false;
+
+/* Lenis arrives as a module, so it may land before or after the load handler.
+   Both paths call this and it only ever attaches once. */
+function attachLenis() {
+  if (lenis || typeof Lenis === 'undefined' || reduceMotion.matches) return;
+  lenis = new Lenis({duration: 1.05, smoothWheel: true, wheelMultiplier: 0.9});
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  }
+}
+
+function initScroll() {
+  if (scrollReady) return;
+  scrollReady = true;
+  const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+  attachLenis();
+  if (hasGsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    // One scrub over the panel's travel: the same scalar the hand-rolled
+    // driver produced, but frame-synced to the smoothed scroll instead of
+    // sampled from it.
+    ScrollTrigger.create({
+      trigger: '#mapPanel', start: 'top 92%', end: 'top 34%', scrub: true,
+      onUpdate: st => { massP = st.progress; applyMass(); onGlScroll(st.progress); },
+      onEnter: primeGl, onEnterBack: primeGl,
+    });
+    ScrollTrigger.create({trigger: '#mapPanel', start: 'top bottom', onEnter: primeGl});
+  } else {
+    addEventListener('scroll', onMassScroll, {passive: true});
+    addEventListener('resize', onMassScroll, {passive: true});
+    const near = () => { const r = document.getElementById('mapPanel');
+      if (r && r.getBoundingClientRect().top < innerHeight * 1.6) primeGl(); };
+    addEventListener('scroll', near, {passive: true});
+    near();
+  }
+  massP = massTarget(); applyMass();
+}
+addEventListener('load', initScroll);
 reduceMotion.addEventListener('change', applyMass);
+
+/* ── the extruded drawing ───────────────────────────────────────────────
+   The SVG plan is the base and the fallback. When the sheet is approached,
+   three.js is fetched once and the same provinces are extruded as prisms
+   whose height is the metric already on screen -- so the 3D adds depth to a
+   reading rather than a second, different one. Orthographic, because this is
+   an axonometric drawing and parallel lines have to stay parallel. */
+// r149 is the last release whose UMD build is supported: r150 deprecates it
+// and r160 warns that it is being removed. Pinned, not floating.
+const GL_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js';
+let GL = null, glPending = false, glFailed = false;
+
+function primeGl() {
+  if (GL || glPending || glFailed || reduceMotion.matches) return;
+  if (!document.createElement('canvas').getContext('webgl')) { glFailed = true; return; }
+  glPending = true;
+  const sc = document.createElement('script');
+  sc.src = GL_SRC;
+  sc.onload = () => { glPending = false; try { buildGl(); } catch (e) { glFailed = true; } };
+  sc.onerror = () => { glPending = false; glFailed = true; };
+  document.head.appendChild(sc);
+}
+
+function glShapes() {
+  // Reuse the plan's own projection so the prisms sit exactly where the
+  // choropleth does, then centre on the drawing's middle.
+  const P = buildPaths();
+  const W = +P.w, H = +P.h;
+  const geo = PV.geo || [];
+  const ringOf = r => {
+    const sh = new THREE.Shape();
+    r.forEach((c, i) => {
+      const x = P.proj[0](c) - W / 2, y = -(P.proj[1](c) - H / 2);
+      i ? sh.lineTo(x, y) : sh.moveTo(x, y);
+    });
+    return sh;
+  };
+  return geo.map(f => {
+    const polys = f.t === 'Polygon' ? [f.g] : f.g;
+    const shapes = polys.map(pg => {
+      const outer = ringOf(pg[0]);
+      pg.slice(1).forEach(h => outer.holes.push(new THREE.Path(ringOf(h).getPoints())));
+      return outer;
+    });
+    return {code: f.c, shapes};
+  });
+}
+
+function buildGl() {
+  const host = document.getElementById('mapHost');
+  if (!host) return;
+  const P = buildPaths();
+  const W = +P.w, H = +P.h;
+  const box = host.getBoundingClientRect();
+  const size = Math.max(320, Math.min(470, box.width || 470));
+
+  const V = H + MASS_HEAD;                 // the SVG reserves the same headroom
+  const scene = new THREE.Scene();
+  const cam = new THREE.OrthographicCamera(-W / 2, W / 2, V / 2, -V / 2, -4000, 4000);
+  const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+  renderer.setSize(size, size * V / W, false);
+  renderer.setClearAlpha(0);
+  host.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.86));
+  const key = new THREE.DirectionalLight(0xffffff, 0.62);
+  key.position.set(-0.45, 1, 0.75);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.22);
+  fill.position.set(0.6, 0.3, -0.5);
+  scene.add(fill);
+
+  const root = new THREE.Group();
+  scene.add(root);
+  const meshes = {};
+  glShapes().forEach(({code, shapes}) => {
+    const g = new THREE.ExtrudeGeometry(shapes, {depth: 1, bevelEnabled: false});
+    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({color: 0xcccccc}));
+    m.userData.code = code;
+    meshes[code] = m;
+    root.add(m);
+  });
+
+  GL = {scene, cam, renderer, root, meshes, size, W, H, V};
+  host.classList.add('gl');
+  paintGl();
+  onGlScroll(massP);
+  wireGlPointer();
+}
+
+/* Colour and height come from the same numbers the choropleth uses, so the
+   two layers can never disagree. */
+function paintGl() {
+  if (!GL) return;
+  const snap = PV.months[mapMonth];
+  const base = runBase(mapMonth);
+  const baseSnap = base ? PV.months[base] : null;
+  if (!snap) return;
+  const vals = [];
+  const by = {};
+  Object.keys(PV_BY_CODE).forEach(code => {
+    const v = provValue(code, snap, baseSnap);
+    by[code] = v;
+    if (v != null) vals.push(v);
+  });
+  const diverging = mapMetric === 'change';
+  const spread = (() => { const a = vals.map(Math.abs).sort((x, y) => x - y);
+    return a.length ? Math.max(0.02, a[Math.min(a.length - 1, Math.round(0.9 * (a.length - 1)))]) : 0.1; })();
+  const edges = [-spread, -spread / 3, spread / 3, spread];
+  const bin = diverging ? (v => 1 + edges.filter(e => v > e).length)
+                        : binner('level', vals);
+  const top1 = vals.length ? Math.max(...vals.map(Math.abs)) : 1;
+  const css = getComputedStyle(document.documentElement);
+  const pal = diverging ? 'd' : 's';
+  const tone = n => new THREE.Color(css.getPropertyValue('--' + pal + n).trim() || '#cccccc');
+  const nodata = new THREE.Color(css.getPropertyValue('--nodata').trim() || '#dddddd');
+  Object.entries(GL.meshes).forEach(([code, m]) => {
+    const v = by[code];
+    m.material.color = v == null ? nodata : tone(bin(v));
+    m.userData.h = v == null || !top1 ? 1 : Math.max(1, (Math.abs(v) / top1) * MASS_MAX);
+    m.material.needsUpdate = true;
+  });
+  GL.renderer.render(GL.scene, GL.cam);
+}
+
+/* Scroll lays the drawing back and raises the prisms -- the same two moves the
+   SVG makes, in the same range, so switching layers is not a switch of story. */
+function onGlScroll(p) {
+  if (!GL) return;
+  const theta = (Math.PI / 2) * 0.62 * p;
+  GL.root.rotation.x = -theta;
+  // Laying the sheet back foreshortens the plan and turns the prisms' depth
+  // into projected height, so the block the reader sees changes shape as it
+  // rises. Centre that block rather than the plan alone, or the drawing drifts
+  // to the floor of the frame and leaves the headroom empty above it.
+  const rise = MASS_MAX * Math.sin(theta) * p;
+  GL.root.position.y = -rise / 2;
+  GL.root.scale.setScalar(1 + 0.16 * p);   // and push in a little as it stands
+  Object.values(GL.meshes).forEach(m => {
+    m.scale.z = Math.max(0.001, (m.userData.h || 1) * p);
+  });
+  GL.renderer.render(GL.scene, GL.cam);
+}
+
+function wireGlPointer() {
+  const cv = GL.renderer.domElement;
+  const ray = new THREE.Raycaster();
+  const v2 = new THREE.Vector2();
+  const pick = e => {
+    const r = cv.getBoundingClientRect();
+    v2.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    v2.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    ray.setFromCamera(v2, GL.cam);
+    const hit = ray.intersectObjects(Object.values(GL.meshes), false)[0];
+    return hit ? hit.object.userData.code : null;
+  };
+  cv.addEventListener('mousemove', e => {
+    const code = pick(e);
+    cv.style.cursor = code ? 'pointer' : 'default';
+    if (code) showProvTip(code, e); else tip.classList.remove('on');
+  });
+  cv.addEventListener('mouseleave', () => tip.classList.remove('on'));
+  cv.addEventListener('click', e => {
+    const code = pick(e);
+    if (!code) return;
+    state.province = state.province === code ? null : code;
+    renderMap(); writeHash();
+  });
+}
 
 /* ── render: province map ─────────────────────────────────────────────
    Where the money leaves from. Work-permit holders by province, from the DOE
@@ -757,6 +977,7 @@ function buildPaths() {
     return [sx / big.length, sy / big.length];
   };
   MAP_PATHS = {
+    proj: [c => +px(c), c => +py(c)],
     w: ((maxX - minX) * kx * S + pad * 2).toFixed(0),
     h: (H + pad * 2).toFixed(0),
     d: geo.map(f => ({code: f.c, d: f.t === 'Polygon' ? poly(f.g) : f.g.map(poly).join(''),
@@ -881,6 +1102,7 @@ function renderMap() {
   MASS_EL = {plan: host.querySelector('.plan'),
              cols: [...host.querySelectorAll('.mass > g')]};
   applyMass();
+  if (GL) { host.appendChild(GL.renderer.domElement); paintGl(); onGlScroll(massP); }
 
   const fmtP = v => v == null ? T('none')
     : mapMetric === 'share' ? pct(v, 0)
@@ -1173,3 +1395,16 @@ readHash();
 // arrives with something in it instead of an instruction.
 if (!state.sel) state.sel = Q.slice().reverse().find(q => PT[q] != null) || null;
 renderAll();
+
+/* The only surface the page needs from outside: the Lenis module hands itself
+   in, and verification can drive the scroll scalar. */
+window.MRC = {
+  attachLenis,
+  primeGl,
+  setMass(p) { massP = p; applyMass(); onGlScroll(p); },
+  get glReady() { return !!GL; },
+  get glState() { return {pending: glPending, failed: glFailed, built: !!GL}; },
+  get scroll() { return {lenis: !!lenis, massP}; },
+  state, DATA,
+};
+})();

@@ -14,10 +14,20 @@
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23f8f9f8"/><rect x="5" y="6" width="22" height="4" fill="%23f5e3ce"/><rect x="5" y="11" width="22" height="4" fill="%23d9945c"/><rect x="5" y="16" width="22" height="4" fill="%23bd6b30"/><rect x="5" y="21" width="22" height="4" fill="%2394420f"/><rect x="1.6" y="1.6" width="28.8" height="28.8" fill="none" stroke="%232c4d61" stroke-width="3.2"/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
 <!-- ฿ (U+0E3F) is not in the Latin Plex cuts, so one subsetted face carries
      just that glyph rather than a whole Thai family for a currency sign. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&text=%E0%B8%BF&display=swap">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Lenis ships no UMD build, so it comes in as a module and hands itself to
+     the page. Order-independent: whichever of this and the load handler runs
+     second finds the other already there. -->
+<script type="module">
+  import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm";
+  window.Lenis = Lenis;
+  if (window.MRC) window.MRC.attachLenis();
+</script>
 <style>
 /* ── tokens ──────────────────────────────────────────────────────────
    Light is the base set; dark is redefined twice so that the OS setting
@@ -39,7 +49,7 @@
   --on-petrol:#fbf8f1;
   /* Noto Sans Thai sits in every stack so ฿ (U+0E3F) has a designed home
      instead of falling back mid-word to whatever the OS offers. */
-  --mono:"IBM Plex Mono","Noto Sans Thai",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --mono:"Geist Mono","Noto Sans Thai",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:"IBM Plex Sans","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --cond:"IBM Plex Sans Condensed","IBM Plex Sans","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
   /* the annotation hand -- marginalia only, never data */
@@ -340,7 +350,19 @@ h3{font-family:var(--cond);font-weight:600;font-size:15px;margin:16px 0 2px}
 @media (max-width:880px){.mapcols{grid-template-columns:minmax(0,1fr)}}
 .mapbox{position:relative;min-width:0}
 svg.map{display:block;width:100%;max-width:470px;height:auto;margin:0 auto;
-  overflow:visible}
+  overflow:visible;transition:opacity .5s}
+/* The extruded drawing is an upgrade layer. It is fetched only when the sheet
+   is approached, and the SVG plan underneath it is what a reader gets when
+   WebGL is unavailable, refused, or still loading. */
+.mapbox{position:relative}
+.mapbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
+  pointer-events:auto;opacity:0;transition:opacity .6s}
+.mapbox.gl canvas{opacity:1}
+.mapbox.gl svg.map{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){
+  .mapbox canvas{display:none}
+  .mapbox.gl svg.map{opacity:1;pointer-events:auto}
+}
 svg.map .plan path{stroke:var(--surface);stroke-width:.6;cursor:pointer}
 /* The massing layer: one upright column per province, height carrying the
    same measured figure the fill shows. Drawn over the plan, never in it. */
@@ -478,7 +500,7 @@ a:hover{color:var(--ember)}
     <div class="panel">
       <div class="ptitle"><h2 id="boardTitle"></h2><span id="boardGrade"></span></div>
       <div id="boardBanner"></div>
-      <div class="gridwrap"><div class="qgrid" id="board"></div></div>
+      <div class="gridwrap" data-lenis-prevent><div class="qgrid" id="board"></div></div>
       <div class="legend" id="legend"></div>
       <div class="legcap"><span id="legLo"></span><span id="legMid"></span><span id="legHi"></span></div>
       <p class="hint" id="boardHint"></p>
@@ -528,7 +550,7 @@ a:hover{color:var(--ember)}
 
 <div class="panel">
   <div class="ptitle"><h2 id="tblTitle"></h2><span class="lab" id="tblHint"></span></div>
-  <div class="scroll tallscroll"><table id="tbl">
+  <div class="scroll tallscroll" data-lenis-prevent><table id="tbl">
     <thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody>
   </table></div>
 </div>
