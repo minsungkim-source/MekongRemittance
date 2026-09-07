@@ -159,7 +159,11 @@ export default function Massing({ onPick, onHover }) {
   if (!ok || !geom) return null;
 
   return (
-    <div className="glwrap" style={{ aspectRatio: `${geom.w} / ${geom.h + geom.head}` }}>
+    /* The canvas re-presents the plan that is already in the accessibility tree
+       as a labelled image, and the ranking beside it carries the same figures
+       as text. A second, unlabelled graphic would only be noise to a reader. */
+    <div className="glwrap" aria-hidden="true"
+      style={{ aspectRatio: `${geom.w} / ${geom.h + geom.head}` }}>
     <Canvas
       orthographic
       frameloop="demand"

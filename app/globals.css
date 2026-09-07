@@ -467,6 +467,11 @@ td.mod{background-image:repeating-linear-gradient(45deg,
   margin-top:5px;border-top:1px solid var(--rule-2);padding-top:4px;line-height:1.5}
 @media (hover:none){.tip{display:none}}
 :focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+/* Read by assistive technology, never drawn. Not display:none, which would
+   take it out of the accessibility tree along with the announcement. */
+.sronly{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 a{color:var(--petrol)}
 a:hover{color:var(--ember)}
