@@ -542,7 +542,11 @@ function renderBoard() {
         // the reading existed, it was rejected. Struck, so you can see it was.
         const withheld = (DATA.meta.doe_disputed_quarters || []).includes(q)
           && state.corridor !== 'ALL';
-        h += `<div class="cell nd${withheld ? ' void' : ''}" data-q="${q}"`
+        // An empty cell can still be the selected one -- the newest quarters
+        // carry no centred index yet, and the detail panel reads them happily,
+        // so the grid has to show where the reader is standing.
+        h += `<div class="cell nd${withheld ? ' void' : ''}`
+          + `${state.sel === q ? ' sel' : ''}" data-q="${q}"`
           + ` title="${withheld ? T('roWithheld') : (DQ[q] || state.corridor === 'ALL' ? '' : T('noRun'))}">`
           + `${withheld ? '' : T('none')}</div>`;
         continue;
