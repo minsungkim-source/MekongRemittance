@@ -192,6 +192,12 @@ details.asm[open] summary::before{content:"▾ "}
   margin-bottom:3px}
 .w .r{display:flex;align-items:center;gap:9px}
 .w input[type=range]{flex:1;min-width:0;accent-color:var(--petrol)}
+/* The whole track is the target -- a tap anywhere on it moves the thumb -- and
+   at its natural 16px it misses the 24px minimum for touch (WCAG 2.5.8). The
+   box grows only where the pointer is coarse, so the mouse layout is untouched. */
+@media (pointer:coarse){
+  .w input[type=range],.monthbar input[type=range]{height:26px}
+}
 .w .pv{font-family:var(--mono);font-size:11.5px;width:40px;text-align:right;
   font-variant-numeric:tabular-nums}
 /* Notes under each plate are prose, not labels: they get the text face at a
