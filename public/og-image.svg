@@ -1,0 +1,44 @@
+<!-- Source for public/og-image.png, the card a shared link unfurls into.
+     The card is 1200x630 and sits centred in a 1200x1200 square: the only
+     SVG rasteriser on the build machine (qlmanage) forces a square viewport
+     and crops from the centre, so centring it here makes the crop exact.
+     Regenerate with scripts/og.sh. Bar widths are proportional to the four
+     modelled corridor totals the ranking panel shows. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#d6cdb6" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="1200" fill="#e7dfcc"/>
+  <rect width="1200" height="1200" fill="url(#g)"/>
+  <g transform="translate(0,285)">
+    <rect x="26" y="26" width="1148" height="578" fill="#fbf8f1" stroke="#1a1e22" stroke-width="2"/>
+    <rect x="26" y="26" width="1148" height="10" fill="#27406e"/>
+
+    <text x="74" y="122" font-family="Menlo,monospace" font-size="19" letter-spacing="3.4" fill="#b4531f">THAILAND · OUTWARD PERSONAL TRANSFERS</text>
+    <text x="74" y="212" font-family="Helvetica Neue,Helvetica,sans-serif" font-weight="700" font-size="74" fill="#1a1e22">Mekong Remittance</text>
+    <text x="74" y="292" font-family="Helvetica Neue,Helvetica,sans-serif" font-weight="700" font-size="74" fill="#1a1e22">Corridors</text>
+
+    <text x="74" y="356" font-family="Helvetica Neue,Helvetica,sans-serif" font-size="25" fill="#454e56">Money sent home from Thailand by workers from Myanmar, Cambodia,</text>
+    <text x="74" y="392" font-family="Helvetica Neue,Helvetica,sans-serif" font-size="25" fill="#454e56">Laos and Viet Nam — measured quarterly, split by corridor, every</text>
+    <text x="74" y="428" font-family="Helvetica Neue,Helvetica,sans-serif" font-size="25" fill="#454e56">number marked measured or estimated.</text>
+
+    <line x1="74" y1="472" x2="1126" y2="472" stroke="#cdc3ab" stroke-width="1.5"/>
+    <text x="74" y="504" font-family="Menlo,monospace" font-size="15" letter-spacing="2.6" fill="#636b71">MODELLED FLOW BY CORRIDOR · LAST FOUR MEASURED QUARTERS · BN BAHT</text>
+
+    <rect x="74"   y="522" width="630" height="24" fill="#91410f"/>
+    <rect x="704"  y="522" width="250" height="24" fill="#ba6a2f"/>
+    <rect x="954"  y="522" width="167" height="24" fill="#d6935a"/>
+    <rect x="1121" y="522" width="5"   height="24" fill="#e6bd8e"/>
+
+    <rect x="74"  y="566" width="13" height="13" fill="#91410f"/>
+    <text x="95"  y="578" font-family="Menlo,monospace" font-size="19" fill="#1a1e22">Myanmar 85.2</text>
+    <rect x="355" y="566" width="13" height="13" fill="#ba6a2f"/>
+    <text x="376" y="578" font-family="Menlo,monospace" font-size="19" fill="#1a1e22">Cambodia 33.9</text>
+    <rect x="636" y="566" width="13" height="13" fill="#d6935a"/>
+    <text x="657" y="578" font-family="Menlo,monospace" font-size="19" fill="#1a1e22">Laos 22.5</text>
+    <rect x="917" y="566" width="13" height="13" fill="#e6bd8e"/>
+    <text x="938" y="578" font-family="Menlo,monospace" font-size="19" fill="#1a1e22">Viet Nam 0.7</text>
+  </g>
+</svg>
