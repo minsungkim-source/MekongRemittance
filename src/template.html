@@ -82,8 +82,8 @@
 .rule-out{position:fixed;left:14px;bottom:12px;z-index:30;pointer-events:none;
   font-family:var(--hand);font-size:12.5px;line-height:1.45;color:var(--ink-2);
   display:flex;gap:14px;align-items:baseline;
-  background:color-mix(in srgb,var(--paper) 78%,transparent);
-  padding:5px 10px 4px;border:1px solid var(--rule)}
+  background:var(--paper);padding:5px 10px 4px;border:1px solid var(--rule);
+  box-shadow:2px 2px 0 var(--graphite)}
 .rule-out i{font-style:normal;color:var(--ink-3)}
 .rule-out b{font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
 .rule-out .at{max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -335,14 +335,23 @@ h3{font-family:var(--cond);font-weight:600;font-size:15px;margin:16px 0 2px}
   text-transform:uppercase;color:var(--ink-3)}
 
 /* ── province map ─────────────────────────────────────────────────── */
-.mapcols{display:grid;grid-template-columns:minmax(240px,352px) minmax(280px,1fr);
-  gap:30px;align-items:start}
+.mapcols{display:grid;grid-template-columns:minmax(300px,470px) minmax(260px,1fr);
+  gap:32px;align-items:start}
 @media (max-width:880px){.mapcols{grid-template-columns:minmax(0,1fr)}}
 .mapbox{position:relative;min-width:0}
-svg.map{display:block;width:100%;max-width:352px;height:auto;margin:0 auto}
-svg.map path{stroke:var(--surface);stroke-width:.6;cursor:pointer}
-svg.map path:hover{stroke:var(--ink);stroke-width:1.4}
-svg.map path.sel{stroke:var(--ink);stroke-width:1.8}
+svg.map{display:block;width:100%;max-width:470px;height:auto;margin:0 auto;
+  overflow:visible}
+svg.map .plan path{stroke:var(--surface);stroke-width:.6;cursor:pointer}
+/* The massing layer: one upright column per province, height carrying the
+   same measured figure the fill shows. Drawn over the plan, never in it. */
+svg.map .mass{pointer-events:none}
+svg.map .mass line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:butt;
+  opacity:.72}
+svg.map .mass circle{fill:var(--ember);stroke:var(--surface);stroke-width:1.4}
+svg.map .mass > g{transition:opacity .2s}
+@media (prefers-reduced-motion:reduce){svg.map .mass > g{transition:none}}
+svg.map .plan path:hover{stroke:var(--ink);stroke-width:1.4}
+svg.map .plan path.sel{stroke:var(--ink);stroke-width:1.8}
 svg.map .nd{fill:var(--nodata)}
 .provrank .row{grid-template-columns:20px minmax(0,1fr) auto}
 

@@ -90,6 +90,8 @@ en: {
   fSince2016: 'strongest quarter, since 2016', fQuarters: 'measured quarters',
   mapTitle: 'Where the money leaves from',
   mChangeProv: 'Change in run', monthLabel: 'month', monthsWord: n => `${n} month${n === 1 ? '' : 's'}`,
+  mMassing: 'Massing',
+  massNote: 'Scroll the sheet and the plan lies back into axonometric, raising a column on every province — the same measured figure the fill carries, read as height instead of tone. Turn it off to keep the drawing flat.',
   legFell: 'fell', legRose: 'rose',
   mWorkersProv: 'Work permits', mShareProv: 'Share of the province',
   mapHint: (n, m, cov, rej, pub) => `Work-permit holders by province, ${m}. ${n} of 77 provinces carry a figure. These tables cover four of the permit categories, not all of them, so the province sum reaches ${cov} of the national count by nationality — the remainder sits in categories the report does not break down by province. ${pub} month${pub === 1 ? '' : 's'} reconcile closely enough to publish and ${rej} were rejected; the reasons are in the source table above. The slider moves inside that set, and change is only ever measured against the first month of the same run.`,
@@ -162,6 +164,8 @@ th: {
   fSince2016: 'ไตรมาสสูงสุด ตั้งแต่ 2559', fQuarters: 'ไตรมาสที่วัดได้',
   mapTitle: 'เงินออกจากจังหวัดใด',
   mChangeProv: 'เปลี่ยนแปลงในช่วง', monthLabel: 'เดือน', monthsWord: n => `${n} เดือน`,
+  mMassing: 'ทรงสามมิติ',
+  massNote: 'เลื่อนหน้าจอแล้วผังจะเอนลงเป็นภาพสามมิติ และแต่ละจังหวัดจะยกแท่งขึ้น ความสูงคือค่าเดียวกับที่สีแสดง ปิดได้หากต้องการผังแบน',
   legFell: 'ลดลง', legRose: 'เพิ่มขึ้น',
   mWorkersProv: 'ใบอนุญาตทำงาน', mShareProv: 'สัดส่วนในจังหวัด',
   mapHint: (n, m, cov, rej, pub) => `จำนวนผู้ถือใบอนุญาตทำงานรายจังหวัด ${m} มีข้อมูล ${n} จาก 77 จังหวัด ตารางเหล่านี้ครอบคลุมสี่ประเภทใบอนุญาต ไม่ใช่ทั้งหมด ผลรวมรายจังหวัดจึงเท่ากับ ${cov} ของยอดรวมระดับชาติ แสดง ${pub} เดือน และตัดออก ${rej} เดือน การเปรียบเทียบทำเฉพาะภายในช่วงข้อมูลเดียวกัน`,
@@ -222,6 +226,8 @@ ko: {
   fSince2016: '가장 강한 분기, 2016년 이후', fQuarters: '측정 분기',
   mapTitle: '돈이 어디서 나가는가',
   mChangeProv: '구간 내 변화', monthLabel: '월', monthsWord: n => `${n}개월`,
+  mMassing: '입체',
+  massNote: '스크롤하면 평면도가 뒤로 누워 축측투상이 되고, 주마다 기둥이 올라온다. 높이는 색이 담고 있는 것과 같은 실측값이다 — 색조 대신 높이로 읽는다. 끄면 평면도로 유지된다.',
   legFell: '감소', legRose: '증가',
   mWorkersProv: '노동허가', mShareProv: '주 내 점유율',
   mapHint: (n, m, cov, rej, pub) => `주별 노동허가 보유자, ${m}. 77개 주 중 ${n}개에 수치가 있다. 이 표들은 허가 유형 전체가 아니라 네 가지만 담으므로 주별 합계는 국적별 전국 집계의 ${cov} 수준이다 — 나머지는 보고서가 주별로 분해하지 않는 유형에 있다. ${pub}개월이 대조를 통과해 실렸고 ${rej}개월은 기각했다. 이유는 위 출처 표에 있다. 슬라이더는 그 범위 안에서만 움직이며, 변화는 항상 같은 구간의 첫 달과 비교한다.`,
@@ -279,6 +285,7 @@ function readHash() {
   // the map module is already initialised by the time this runs
   if (p.get('pm') && PV.months && PV.months[p.get('pm')]) mapMonth = p.get('pm');
   if (['workers', 'share', 'change'].includes(p.get('pv'))) mapMetric = p.get('pv');
+  if (p.get('flat') === '1') massMode = 'flat';
   if (p.get('p')) state.province = p.get('p');
 }
 function writeHash() {
@@ -293,6 +300,7 @@ function writeHash() {
   if (typeof mapMonth === 'string' && PV_KEYS.length && mapMonth !== PV_KEYS[PV_KEYS.length - 1])
     p.set('pm', mapMonth);
   if (mapMetric !== 'workers') p.set('pv', mapMetric);
+  if (massMode === 'flat') p.set('flat', '1');
   if (state.province) p.set('p', state.province);
   history.replaceState(null, '', p.toString() ? '#' + p : location.pathname);
 }
@@ -809,6 +817,63 @@ function markTrace() {
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('trace', modelled.has(p)));
 }
 
+/* ── the plan standing up ───────────────────────────────────────────────
+   One scalar, from the map panel's travel through the viewport, drives both
+   the squash of the plan and the height of the columns. Scrubbed both ways,
+   throttled to a frame, and skipped entirely when the reader has asked for
+   less motion or has locked the drawing flat. */
+const MASS_HEAD = 250;      // headroom in the viewBox for the columns
+const MASS_MAX = 230;       // the tallest column, in the same units
+let MASS_EL = null, massP = 0, massFrame = false;
+let massMode = 'auto';      // 'auto' follows the scroll, 'flat' stays a plan
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function massTarget() {
+  if (massMode === 'flat') return 0;
+  const panel = document.getElementById('mapPanel');
+  if (!panel) return 0;
+  const r = panel.getBoundingClientRect();
+  // 0 while the sheet is still below the fold, 1 once it has settled in view
+  const enter = innerHeight * 0.92, settle = innerHeight * 0.34;
+  const p = (enter - r.top) / (enter - settle);
+  return Math.max(0, Math.min(1, p));
+}
+
+function applyMass() {
+  if (!MASS_EL || !MASS_EL.plan) return;
+  const p = reduceMotion.matches ? (massMode === 'flat' ? 0 : 1) : massP;
+  const H = +buildPaths().h;
+  const k = 1 - 0.42 * p;                    // the plan lies back
+  MASS_EL.plan.setAttribute('transform',
+    `translate(0 ${(H / 2).toFixed(1)}) scale(1 ${k.toFixed(4)}) translate(0 ${(-H / 2).toFixed(1)})`);
+  MASS_EL.cols.forEach(g => {
+    const cx = +g.dataset.c1, cy = +g.dataset.c2, h = +g.dataset.h * p;
+    const base = (cy - H / 2) * k + H / 2;   // the anchor, squashed with the plan
+    const lineEl = g.firstChild, capEl = g.lastChild;
+    lineEl.setAttribute('x1', cx); lineEl.setAttribute('y1', base.toFixed(1));
+    lineEl.setAttribute('x2', cx); lineEl.setAttribute('y2', (base - h).toFixed(1));
+    capEl.setAttribute('cx', cx); capEl.setAttribute('cy', (base - h).toFixed(1));
+    g.style.opacity = p < 0.04 ? 0 : 1;
+  });
+}
+
+function onMassScroll() {
+  if (massFrame) return;
+  massFrame = true;
+  requestAnimationFrame(() => {
+    massFrame = false;
+    const t = massTarget();
+    if (Math.abs(t - massP) < 0.002) return;
+    massP = t;
+    applyMass();
+  });
+}
+addEventListener('load', () => { massP = massTarget(); applyMass(); });
+addEventListener('scroll', onMassScroll, {passive: true});
+addEventListener('resize', onMassScroll, {passive: true});
+reduceMotion.addEventListener('change', applyMass);
+
 /* ── render: province map ─────────────────────────────────────────────
    Where the money leaves from. Work-permit holders by province, from the DOE
    province tables. These cover four of the permit categories rather than all
@@ -852,10 +917,20 @@ function buildPaths() {
   const py = c => ((maxY - c[1]) * S + pad).toFixed(1);
   const ring = r => 'M' + r.map(c => px(c) + ' ' + py(c)).join('L') + 'Z';
   const poly = pg => pg.map(ring).join('');
+  // Where a column stands: the vertex mean of the province's largest ring,
+  // which keeps the mark on the mainland instead of out on an island.
+  const anchor = f => {
+    const rings = f.t === 'Polygon' ? f.g : f.g.map(pg => pg[0]);
+    const big = rings.reduce((a, b) => (b.length > a.length ? b : a), rings[0]);
+    let sx = 0, sy = 0;
+    big.forEach(c => { sx += +px(c); sy += +py(c); });
+    return [sx / big.length, sy / big.length];
+  };
   MAP_PATHS = {
     w: ((maxX - minX) * kx * S + pad * 2).toFixed(0),
     h: (H + pad * 2).toFixed(0),
-    d: geo.map(f => ({code: f.c, d: f.t === 'Polygon' ? poly(f.g) : f.g.map(poly).join('')})),
+    d: geo.map(f => ({code: f.c, d: f.t === 'Polygon' ? poly(f.g) : f.g.map(poly).join(''),
+                      at: anchor(f)})),
   };
   return MAP_PATHS;
 }
@@ -900,7 +975,9 @@ function renderMap() {
     chip(T('mWorkersProv'), mapMetric === 'workers', 'data-map="workers"') +
     chip(T('mShareProv'), mapMetric === 'share', 'data-map="share"',
          state.corridor === 'ALL') +
-    chip(T('mChangeProv'), mapMetric === 'change', 'data-map="change"', !baseSnap);
+    chip(T('mChangeProv'), mapMetric === 'change', 'data-map="change"', !baseSnap) +
+    `<span style="width:9px"></span>` +
+    chip(T('mMassing'), massMode === 'auto', 'data-mass="1"');
   document.getElementById('mapTitle').textContent =
     T('mapTitle') + '  ·  ' + month + (cObj ? '  ·  ' + cname(cObj) : '');
 
@@ -934,7 +1011,19 @@ function renderMap() {
     : binner('level', vals);
   const pal = diverging ? 'd' : 's';
   const P = buildPaths();
-  let svg = `<svg class="map" viewBox="0 0 ${P.w} ${P.h}" role="img" aria-label="${T('mapTitle')}">`;
+  // The drawing is a plan until you scroll it, then it lies back into
+  // axonometric and every province raises a column. Height is the same
+  // measured quantity the fill already shows, so standing the sheet up adds a
+  // reading rather than an effect: the tall stacks are where the money leaves.
+  // The projection is done in SVG coordinates -- the plan group is squashed
+  // vertically and the columns are drawn upright at the squashed anchors --
+  // so verticals stay vertical, the way an axonometric is meant to work.
+  const H = +P.h, W = +P.w;
+  const top = MASS_HEAD;
+  let svg = `<svg class="map" viewBox="0 ${-top} ${W} ${H + top}" role="img"`
+    + ` aria-label="${T('mapTitle')}">`
+    + `<g class="plan" transform="translate(0 ${(H / 2).toFixed(1)}) scale(1 1)`
+    + ` translate(0 ${(-H / 2).toFixed(1)})">`;
   P.d.forEach(f => {
     const v = byCode[f.code];
     const cls2 = v == null ? 'nd' : '';
@@ -942,8 +1031,26 @@ function renderMap() {
     svg += `<path class="${cls2}${state.province === f.code ? ' sel' : ''}"${fill}`
       + ` d="${f.d}" data-p="${f.code}"></path>`;
   });
-  svg += '</svg>';
+  svg += '</g><g class="mass" aria-hidden="true">';
+  // tallest column is a fixed share of the drawing, so the massing reads the
+  // same whichever metric is on screen
+  const top1 = vals.length ? Math.max(...vals.map(Math.abs)) : 1;
+  P.d.forEach(f => {
+    const v = byCode[f.code];
+    if (v == null || !top1) return;
+    const hgt = (Math.abs(v) / top1) * MASS_MAX;
+    if (hgt < 0.8) return;
+    const [cx, cy] = f.at;
+    svg += `<g data-c1="${cx.toFixed(1)}" data-c2="${cy.toFixed(1)}"`
+      + ` data-h="${hgt.toFixed(1)}" data-p="${f.code}">`
+      + `<line x1="0" y1="0" x2="0" y2="0"></line>`
+      + `<circle cx="0" cy="0" r="1.7"></circle></g>`;
+  });
+  svg += '</g></svg>';
   host.innerHTML = svg;
+  MASS_EL = {plan: host.querySelector('.plan'),
+             cols: [...host.querySelectorAll('.mass > g')]};
+  applyMass();
 
   const fmtP = v => v == null ? T('none')
     : mapMetric === 'share' ? pct(v, 0)
@@ -971,7 +1078,8 @@ function renderMap() {
         <span class="v">${fmtP(byCode[code])}</span></div></div>`).join('');
 
   const cov = snap.coverage || {};
-  document.getElementById('mapHint').innerHTML = T('mapHint')(
+  document.getElementById('mapHint').innerHTML =
+    (massMode === 'auto' ? T('massNote') + ' ' : '') + T('mapHint')(
     snap.provinces, month,
     Object.entries(cov).map(([k, v]) => `${k} ${(v * 100).toFixed(0)}%`).join(', '),
     (PV.rejected || []).length, PV_KEYS.length);
@@ -1104,6 +1212,8 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button.chip');
   if (b) {
     if (b.disabled) return;
+    if (b.dataset.mass) { massMode = massMode === 'auto' ? 'flat' : 'auto';
+      massP = massMode === 'flat' ? 0 : massTarget(); renderMap(); writeHash(); return; }
     if (b.dataset.map) { mapMetric = b.dataset.map; renderMap(); writeHash(); return; }
     if (b.dataset.c) state.corridor = b.dataset.c;
     else if (b.dataset.m) state.metric = b.dataset.m;
