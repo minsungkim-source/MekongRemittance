@@ -254,10 +254,10 @@ paid, _ = wb("wb_tha_paid.json")
 gdp, _ = wb("wb_gdp.json")
 
 CORRIDORS = [
-    {"code": "MM", "iso3": "MMR", "en": "Myanmar",  "th": "เมียนมา",  "ko": "미얀마"},
-    {"code": "KH", "iso3": "KHM", "en": "Cambodia", "th": "กัมพูชา",  "ko": "캄보디아"},
-    {"code": "LA", "iso3": "LAO", "en": "Laos",     "th": "ลาว",      "ko": "라오스"},
-    {"code": "VN", "iso3": "VNM", "en": "Viet Nam", "th": "เวียดนาม", "ko": "베트남"},
+    {"code": "MM", "iso3": "MMR", "en": "Myanmar"},
+    {"code": "KH", "iso3": "KHM", "en": "Cambodia"},
+    {"code": "LA", "iso3": "LAO", "en": "Laos"},
+    {"code": "VN", "iso3": "VNM", "en": "Viet Nam"},
 ]
 
 # ── festival windows, at month granularity ──────────────────────────────
@@ -367,8 +367,8 @@ data = {
            "fx": fx.get("THA", {}), "updated": wb_upd},
     "prov": {"months": pv_months, "latest": pv_latest, "base": pv_base,
              "rejected": pv_reject,
-             "regions": PROV_GEO["regions"],
-             "list": PROV_GEO["provinces"],
+             "list": [{k: v for k, v in p.items() if k != "th"}
+                      for p in PROV_GEO["provinces"]],
              "geo": PROV_GEO["geo"]},
     "corridors": CORRIDORS,
     "festivals": FESTIVALS,

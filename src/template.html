@@ -11,11 +11,13 @@
 <meta property="og:title" content="Mekong Remittance Corridors">
 <meta property="og:description" content="How much money leaves Thailand for Myanmar, Cambodia, Laos and Viet Nam, when in the year it leaves, and which provinces it leaves from -- with every number marked measured or estimated.">
 <meta property="og:locale" content="en_US">
-<meta property="og:locale:alternate" content="th_TH">
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23f8f9f8"/><rect x="5" y="6" width="22" height="4" fill="%23f5e3ce"/><rect x="5" y="11" width="22" height="4" fill="%23d9945c"/><rect x="5" y="16" width="22" height="4" fill="%23bd6b30"/><rect x="5" y="21" width="22" height="4" fill="%2394420f"/><rect x="1.6" y="1.6" width="28.8" height="28.8" fill="none" stroke="%232c4d61" stroke-width="3.2"/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<!-- ฿ (U+0E3F) is not in the Latin Plex cuts, so one subsetted face carries
+     just that glyph rather than a whole Thai family for a currency sign. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&text=%E0%B8%BF&display=swap">
 <style>
 /* ── tokens ──────────────────────────────────────────────────────────
    Light is the base set; dark is redefined twice so that the OS setting
@@ -40,7 +42,6 @@
   --mono:"IBM Plex Mono","Noto Sans Thai",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:"IBM Plex Sans","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --cond:"IBM Plex Sans Condensed","IBM Plex Sans","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
-  --thai:"Noto Sans Thai","Sukhumvit Set",Thonburi,sans-serif;
   /* the annotation hand -- marginalia only, never data */
   --hand:"Architects Daughter","Noto Sans Thai",var(--mono);
 }
@@ -113,7 +114,6 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='2' viewBox='0 0 4 2'%3E%3Ccircle cx='1' cy='1' r='.6' fill='%23000'/%3E%3C/svg%3E");
   background-size:4px 2px;opacity:.05;mix-blend-mode:multiply}
 .wrap{position:relative;z-index:1}
-body.lang-th{--sans:var(--thai);--cond:var(--thai)}
 .wrap{max-width:1320px;margin:0 auto;padding:34px 24px 90px;
   display:flex;flex-direction:column;gap:20px}
 @media (max-width:760px){.wrap{padding:16px 12px 56px;gap:14px}}
@@ -465,7 +465,7 @@ a:hover{color:var(--ember)}
   <div class="ctl"><span class="klab" id="lCorridor"></span><div class="chips" id="cChips"></div></div>
   <div class="ctl"><span class="klab" id="lMetric"></span><div class="chips" id="mChips"></div></div>
   <div class="ctl"><span class="klab" id="lGrade"></span><div class="chips" id="gChips"></div>
-    <span class="klab" id="lLang" style="margin-left:auto"></span><div class="chips" id="lChips"></div></div>
+</div>
   <details class="asm" id="asmBox">
     <summary id="lAssume"></summary>
     <div class="agrid" id="agrid"></div>
