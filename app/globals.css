@@ -22,11 +22,17 @@
   --ink:#1a1e22; --ink-2:#454e56; --ink-3:#636b71;   /* 5.11:1 on --surface */
   --rule:#cdc3ab; --rule-2:#e3dbc8; --hair:#1a1e22;
   --petrol:#27406e; --petrol-2:#4a6a9e; --ember:#b4531f; --ember-2:#c9702f;
-  --s1:#f2e4cd; --s2:#e6bd8e; --s3:#d6935a; --s4:#ba6a2f; --s5:#91410f;
-  --s1t:#1a1e22; --s2t:#1a1e22; --s3t:#1a1e22; --s4t:#fbf8f1; --s5t:#fbf8f1;
-  --d1:#5b8ba8; --d2:#b3c8d2; --d3:#e6e0d2; --d4:#eab077; --d5:#ba591e;
-  --d1t:#fbf8f1; --d2t:#1a1e22; --d3t:#454e56; --d4t:#1a1e22; --d5t:#fbf8f1;
-  --nodata:#ded5be; --hatch:rgba(180,83,31,.16);
+  /* Figures sit on these fills, so every step is measured against the ink it
+     carries, not chosen by eye. Three steps were short: s4 read 3.81, d1 3.47
+     and d5 4.37. d1 needed only the other ink (4.55). s4 lifts 6% to #be733b
+     and takes the dark ink (4.55), which also leaves the simpler rule that
+     light ink appears on the darkest step alone. d5 darkens 2% to #b6571d
+     (4.53). Neighbour separation across the ramp is unchanged within 0.15. */
+  --s1:#f2e4cd; --s2:#e6bd8e; --s3:#d6935a; --s4:#be733b; --s5:#91410f;
+  --s1t:#1a1e22; --s2t:#1a1e22; --s3t:#1a1e22; --s4t:#1a1e22; --s5t:#fbf8f1;
+  --d1:#5b8ba8; --d2:#b3c8d2; --d3:#e6e0d2; --d4:#eab077; --d5:#b6571d;
+  --d1t:#1a1e22; --d2t:#1a1e22; --d3t:#454e56; --d4t:#1a1e22; --d5t:#fbf8f1;
+  --nodata:#ded5be; --nd-ink:#555e65; --hatch:rgba(180,83,31,.16);
   --on-petrol:#fbf8f1;
   /* Noto Sans Thai sits in every stack so ฿ (U+0E3F) has a designed home
      instead of falling back mid-word to whatever the OS offers. */
@@ -45,11 +51,20 @@
   --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
   --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  --s1t:#eaece8; --s2t:#eaece8; --s3t:#1b2024; --s4t:#1b2024; --s5t:#1b2024;
-  --d1:#3f7290; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
+  /* Measured on the swatches, not picked by eye: the figure sits on the fill,
+     so each step takes whichever ink actually clears 4.5:1 against it. On the
+     dark ink s3 read 2.62 and s4 4.36; both clear on the other side, 5.27 and
+     4.78. */
+  --s1t:#eaece8; --s2t:#eaece8; --s3t:#eaece8; --s4t:#14171a; --s5t:#1b2024;
+  /* d1 is the diverging scale's "fell" extreme, and no ink cleared 4.5:1 on the
+     old #3f7290 -- 4.39 light, 3.14 dark -- so the swatch had to move. Lifting
+     it to #5e89a2 with the dark ink reads 4.78, and separates it from d2 better
+     than darkening would have (2.58 against 1.80). It now matches d5, the other
+     extreme, which already pairs a saturated fill with dark ink. */
+  --d1:#5e89a2; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
   --on-petrol:#14171a;
-  --d1t:#eaece8; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
-  --nodata:#232a2d; --hatch:rgba(218,132,82,.18);
+  --d1t:#14171a; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
+  --nodata:#232a2d; --nd-ink:#8b959c; --hatch:rgba(218,132,82,.18);
 }}
 :root[data-theme="dark"]{
   /* dark is the same table under a lamp: the paper goes to board, the squares
@@ -60,11 +75,20 @@
   --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
   --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  --s1t:#eaece8; --s2t:#eaece8; --s3t:#1b2024; --s4t:#1b2024; --s5t:#1b2024;
-  --d1:#3f7290; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
+  /* Measured on the swatches, not picked by eye: the figure sits on the fill,
+     so each step takes whichever ink actually clears 4.5:1 against it. On the
+     dark ink s3 read 2.62 and s4 4.36; both clear on the other side, 5.27 and
+     4.78. */
+  --s1t:#eaece8; --s2t:#eaece8; --s3t:#eaece8; --s4t:#14171a; --s5t:#1b2024;
+  /* d1 is the diverging scale's "fell" extreme, and no ink cleared 4.5:1 on the
+     old #3f7290 -- 4.39 light, 3.14 dark -- so the swatch had to move. Lifting
+     it to #5e89a2 with the dark ink reads 4.78, and separates it from d2 better
+     than darkening would have (2.58 against 1.80). It now matches d5, the other
+     extreme, which already pairs a saturated fill with dark ink. */
+  --d1:#5e89a2; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
   --on-petrol:#14171a;
-  --d1t:#eaece8; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
-  --nodata:#232a2d; --hatch:rgba(218,132,82,.18);
+  --d1t:#14171a; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
+  --nodata:#232a2d; --nd-ink:#8b959c; --hatch:rgba(218,132,82,.18);
 }
 
 /* ── drafting instruments ────────────────────────────────────────────
@@ -244,7 +268,12 @@ h3{font-family:var(--cond);font-weight:600;font-size:15px;margin:16px 0 2px}
   cursor:pointer;border:1px solid transparent;letter-spacing:-.02em}
 .cell:hover{border-color:var(--ink)}
 .cell.sel{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--surface)}
-.cell.nd{background:var(--nodata);color:var(--ink-3);cursor:default}
+/* The em dash here is not decoration: it says no data, which is a different
+   statement from a zero. On the no-data fill, --ink-3 read 3.71:1, so these
+   cells get their own ink -- the quietest step that still clears 4.5:1 (4.52),
+   rather than --ink-2, which would make the empty cells louder than the
+   measured ones. Dark mode already read 4.77 and keeps --ink-3. */
+.cell.nd{background:var(--nodata);color:var(--nd-ink);cursor:default}
 .cell.nd:hover{border-color:transparent}
 /* an empty cell that is the selected one still shows the reader's place */
 .cell.nd.sel{border-color:var(--ink)}
