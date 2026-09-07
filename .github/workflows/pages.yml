@@ -3,6 +3,10 @@ name: Build and deploy to Pages
 on:
   push:
     branches: [main]
+  # Build on the pull request too, so CI proves the build before anything
+  # reaches main. The deploy job is guarded to main, so a PR never publishes.
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +38,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
