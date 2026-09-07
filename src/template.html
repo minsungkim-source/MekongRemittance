@@ -15,58 +15,104 @@
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23f8f9f8"/><rect x="5" y="6" width="22" height="4" fill="%23f5e3ce"/><rect x="5" y="11" width="22" height="4" fill="%23d9945c"/><rect x="5" y="16" width="22" height="4" fill="%23bd6b30"/><rect x="5" y="21" width="22" height="4" fill="%2394420f"/><rect x="1.6" y="1.6" width="28.8" height="28.8" fill="none" stroke="%232c4d61" stroke-width="3.2"/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap">
 <style>
 /* ── tokens ──────────────────────────────────────────────────────────
    Light is the base set; dark is redefined twice so that the OS setting
    and an explicit theme stamp both win in the right direction.        */
 :root{
-  --paper:#d7dbdc; --paper-2:#eceeed; --surface:#f8f9f8;
-  --ink:#13181b; --ink-2:#454f56; --ink-3:#667077;   /* 4.80:1 on --surface */
-  --rule:#c2c7c8; --rule-2:#dfe2e2; --hair:#13181b;
-  --petrol:#2c4d61; --petrol-2:#4a7691; --ember:#a8491a; --ember-2:#c9702f;
-  --s1:#f5e3ce; --s2:#e9bd91; --s3:#d9945c; --s4:#bd6b30; --s5:#94420f;
-  --s1t:#13181b; --s2t:#13181b; --s3t:#13181b; --s4t:#f8f9f8; --s5t:#f8f9f8;
-  --d1:#5f93ad; --d2:#b7ccd5; --d3:#e6e5df; --d4:#edb279; --d5:#bd5a1e;
-  --d1t:#f8f9f8; --d2t:#13181b; --d3t:#454f56; --d4t:#13181b; --d5t:#f8f9f8;
-  --nodata:#dcdedc; --hatch:rgba(168,73,26,.16);
-  --on-petrol:#f8f9f8;
+  /* The ground is squared drafting paper; every panel is a sheet laid on it.
+     --grid/--grid-2 are the two line weights of the squares, vertical
+     slightly darker than horizontal, the way ruled paper actually prints. */
+  --paper:#e7dfcc; --paper-2:#ded5be; --surface:#fbf8f1;
+  --grid:#d6cdb6; --grid-2:#dfd7c2; --graphite:rgba(26,30,34,.055);
+  --ink:#1a1e22; --ink-2:#454e56; --ink-3:#636b71;   /* 5.11:1 on --surface */
+  --rule:#cdc3ab; --rule-2:#e3dbc8; --hair:#1a1e22;
+  --petrol:#27406e; --petrol-2:#4a6a9e; --ember:#b4531f; --ember-2:#c9702f;
+  --s1:#f2e4cd; --s2:#e6bd8e; --s3:#d6935a; --s4:#ba6a2f; --s5:#91410f;
+  --s1t:#1a1e22; --s2t:#1a1e22; --s3t:#1a1e22; --s4t:#fbf8f1; --s5t:#fbf8f1;
+  --d1:#5b8ba8; --d2:#b3c8d2; --d3:#e6e0d2; --d4:#eab077; --d5:#ba591e;
+  --d1t:#fbf8f1; --d2t:#1a1e22; --d3t:#454e56; --d4t:#1a1e22; --d5t:#fbf8f1;
+  --nodata:#ded5be; --hatch:rgba(180,83,31,.16);
+  --on-petrol:#fbf8f1;
   /* Noto Sans Thai sits in every stack so ฿ (U+0E3F) has a designed home
      instead of falling back mid-word to whatever the OS offers. */
   --mono:"IBM Plex Mono","Noto Sans Thai",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:"IBM Plex Sans","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --cond:"IBM Plex Sans Condensed","IBM Plex Sans","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
   --thai:"Noto Sans Thai","Sukhumvit Set",Thonburi,sans-serif;
+  /* the annotation hand -- marginalia only, never data */
+  --hand:"Architects Daughter","Noto Sans Thai",var(--mono);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#0f1315; --paper-2:#1b2124; --surface:#161b1e;
-  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#8a949b;   /* 5.61:1 on --surface */
-  --rule:#2c3336; --rule-2:#242b2e; --hair:#4e585d;
-  --petrol:#3a6480; --petrol-2:#5d90ad; --ember:#d9834f; --ember-2:#c9702f;
+  /* dark is the same table under a lamp: the paper goes to board, the squares
+     stay just visible, and the blueprint line lifts to carry on the dark. */
+  --paper:#14171a; --paper-2:#1f2429; --surface:#1b2024;
+  --grid:#232a2f; --grid-2:#1e2429; --graphite:rgba(234,236,232,.045);
+  --ink:#eaece8; --ink-2:#a9b2b7; --ink-3:#8b959c;   /* 5.38:1 on --surface */
+  --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
+  --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  --s1t:#e9ece9; --s2t:#e9ece9; --s3t:#161b1e; --s4t:#161b1e; --s5t:#161b1e;
+  --s1t:#eaece8; --s2t:#eaece8; --s3t:#1b2024; --s4t:#1b2024; --s5t:#1b2024;
   --d1:#3f7290; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
-  --on-petrol:#f2f6f7;
-  --d1t:#e9ece9; --d2t:#e9ece9; --d3t:#a8b1b5; --d4t:#e9ece9; --d5t:#0f1315;
-  --nodata:#232a2d; --hatch:rgba(217,131,79,.18);
+  --on-petrol:#14171a;
+  --d1t:#eaece8; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
+  --nodata:#232a2d; --hatch:rgba(218,132,82,.18);
 }}
 :root[data-theme="dark"]{
-  --paper:#0f1315; --paper-2:#1b2124; --surface:#161b1e;
-  --ink:#e9ece9; --ink-2:#a8b1b5; --ink-3:#8a949b;   /* 5.61:1 on --surface */
-  --rule:#2c3336; --rule-2:#242b2e; --hair:#4e585d;
-  --petrol:#3a6480; --petrol-2:#5d90ad; --ember:#d9834f; --ember-2:#c9702f;
+  /* dark is the same table under a lamp: the paper goes to board, the squares
+     stay just visible, and the blueprint line lifts to carry on the dark. */
+  --paper:#14171a; --paper-2:#1f2429; --surface:#1b2024;
+  --grid:#232a2f; --grid-2:#1e2429; --graphite:rgba(234,236,232,.045);
+  --ink:#eaece8; --ink-2:#a9b2b7; --ink-3:#8b959c;   /* 5.38:1 on --surface */
+  --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
+  --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
   --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  --s1t:#e9ece9; --s2t:#e9ece9; --s3t:#161b1e; --s4t:#161b1e; --s5t:#161b1e;
+  --s1t:#eaece8; --s2t:#eaece8; --s3t:#1b2024; --s4t:#1b2024; --s5t:#1b2024;
   --d1:#3f7290; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
-  --on-petrol:#f2f6f7;
-  --d1t:#e9ece9; --d2t:#e9ece9; --d3t:#a8b1b5; --d4t:#e9ece9; --d5t:#0f1315;
-  --nodata:#232a2d; --hatch:rgba(217,131,79,.18);
+  --on-petrol:#14171a;
+  --d1t:#eaece8; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
+  --nodata:#232a2d; --hatch:rgba(218,132,82,.18);
 }
+
+/* ── drafting instruments ────────────────────────────────────────────
+   A coordinate readout, because the page is a plan and a squared grid and
+   knowing where the cursor sits is a reading, not chrome. It names what is
+   under the pointer, so it doubles as the map's and the grid's status line. */
+.rule-out{position:fixed;left:14px;bottom:12px;z-index:30;pointer-events:none;
+  font-family:var(--hand);font-size:12.5px;line-height:1.45;color:var(--ink-2);
+  display:flex;gap:14px;align-items:baseline;
+  background:color-mix(in srgb,var(--paper) 78%,transparent);
+  padding:5px 10px 4px;border:1px solid var(--rule)}
+.rule-out i{font-style:normal;color:var(--ink-3)}
+.rule-out b{font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
+.rule-out .at{max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (hover:none){.rule-out{display:none}}
+@media (max-width:760px){.rule-out{display:none}}
+
+/* A withheld reading is struck through by hand, the way a draughtsman voids a
+   figure rather than erasing it -- the cell stays, the value does not. */
+.cell.void{position:relative}
+.cell.void::after{content:"";position:absolute;left:8%;right:8%;top:50%;
+  height:6px;transform:translateY(-3px);
+  background:no-repeat center/100% 100%
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='6' viewBox='0 0 60 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4.3C11 2.1 22 4.6 33 2.4 43 .6 52 3.4 59 1.7' stroke='%23b4531f' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);
-  font-family:var(--sans);font-size:15px;line-height:1.7}
+  font-family:var(--sans);font-size:15px;line-height:1.7;
+  background-image:
+    linear-gradient(90deg,var(--grid) 1px,transparent 0),
+    linear-gradient(var(--grid-2) 1px,transparent 0);
+  background-size:15px 15px,15px 15px;
+  background-attachment:fixed,fixed}
+/* A 4x2 dot screen over the squares: the grain of something printed, not a
+   photograph of paper. Fixed, so it does not travel with the content. */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='2' viewBox='0 0 4 2'%3E%3Ccircle cx='1' cy='1' r='.6' fill='%23000'/%3E%3C/svg%3E");
+  background-size:4px 2px;opacity:.05;mix-blend-mode:multiply}
+.wrap{position:relative;z-index:1}
 body.lang-th{--sans:var(--thai);--cond:var(--thai)}
 .wrap{max-width:1320px;margin:0 auto;padding:34px 24px 90px;
   display:flex;flex-direction:column;gap:20px}
@@ -79,18 +125,33 @@ body.lang-th{--sans:var(--thai);--cond:var(--thai)}
   text-transform:uppercase;color:var(--ink-3)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .board{background:var(--surface);border:4px solid var(--petrol)}
+/* Sheet: an overlay laid on the drafting paper, lifted by a hard offset
+   shadow rather than a soft one -- paper has an edge, not a glow. */
+.board,.panel,.hero,.controls,.about{box-shadow:3px 3px 0 var(--graphite)}
+.panel{position:relative;transition:box-shadow .16s ease}
+.panel:hover{box-shadow:6px 6px 0 var(--graphite)}
+/* Trace: a modelled sheet. Translucent, so the squared ground reads through
+   it and a modelled panel is visibly a layer over the measured page. The
+   dashed edge is the drafting convention for a line that is not surveyed. */
+.panel.trace{background:color-mix(in srgb,var(--surface) 80%,transparent)}
+.panel.trace::after{content:"";position:absolute;inset:0;pointer-events:none;
+  border:1px dashed var(--ember);opacity:.3}
 .pad{padding:16px 20px 20px}
 @media (max-width:760px){.pad{padding:13px 15px 16px}}
 
 /* ── masthead ─────────────────────────────────────────────────────── */
 .hero{background:var(--surface);border:10px solid var(--petrol)}
 @media (max-width:760px){.hero{border-width:7px}}
+.hbar .lab{font-family:var(--hand);font-size:12.5px;letter-spacing:.03em;
+  text-transform:none}
 .hbar{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
-  flex-wrap:wrap;padding:10px 22px;border-bottom:1.5px solid var(--hair);
-  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+  flex-wrap:wrap;padding:9px 22px;border-bottom:1.5px solid var(--hair);
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  background:color-mix(in srgb,var(--paper-2) 55%,var(--surface))}
 .hbar b{font-weight:600}
-h1{font-family:var(--cond);font-weight:700;font-size:clamp(30px,5.2vw,52px);
-  line-height:1.04;letter-spacing:-.022em;margin:0;padding:20px 22px 6px;text-wrap:balance}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(32px,6vw,66px);
+  line-height:.98;letter-spacing:-.032em;margin:0;padding:22px 22px 8px;
+  text-wrap:balance;text-transform:none}
 .dek{margin:0;padding:0 22px 20px;max-width:68ch;color:var(--ink-2);font-size:15.5px}
 .dek b{color:var(--ink);font-weight:600}
 /* Wide enough for a standfirst: two columns of ~48 characters, the way the
@@ -109,7 +170,7 @@ h1{font-family:var(--cond);font-weight:700;font-size:clamp(30px,5.2vw,52px);
 .fact{padding:11px 20px 13px;background:var(--surface);min-width:0}
 .fact .k{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;
   text-transform:uppercase;color:var(--ink-3)}
-.fact .v{display:block;font-family:var(--cond);font-weight:600;font-size:25px;
+.fact .v{display:block;font-family:var(--cond);font-weight:700;font-size:27px;
   line-height:1.15;letter-spacing:-.018em;margin-top:2px;font-variant-numeric:tabular-nums;
   text-wrap:balance}
 @media (max-width:900px){.fact{padding:10px 16px 12px}.fact .v{font-size:22px}}
@@ -144,8 +205,8 @@ details.asm[open] summary::before{content:"▾ "}
   font-variant-numeric:tabular-nums}
 /* Notes under each plate are prose, not labels: they get the text face at a
    readable size. Mono stays where it earns its keep -- figures and labels. */
-.hint{font-size:12.5px;line-height:1.66;color:var(--ink-2);
-  margin:7px 0 0;max-width:76ch}
+.hint{font-family:var(--hand);font-size:14.5px;line-height:1.58;
+  color:var(--ink-2);margin:7px 0 0;max-width:70ch}
 .hint b{color:var(--ink);font-weight:600}
 
 /* ── two-column body ──────────────────────────────────────────────── */
@@ -477,6 +538,11 @@ a:hover{color:var(--ember)}
 
 </div>
 <div class="tip" id="tip"></div>
+<div class="rule-out" id="ruleOut" aria-hidden="true">
+  <span><i>X</i> <b id="roX">—</b></span>
+  <span><i>Y</i> <b id="roY">—</b></span>
+  <span class="at"><i id="roLabel">over</i> <b id="roAt">the sheet</b></span>
+</div>
 <script>
 const DATA = __DATA__;
 __APP__

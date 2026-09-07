@@ -27,6 +27,9 @@ en: {
   mSi: 'Seasonal index', mLevel: 'Flow per quarter', mShare: 'Corridor share',
   mWorker: 'Per worker, per month', mYoy: 'Year on year',
   gAll: 'Show modelled', gMeasured: 'Measured only',
+  roOver: 'over', roSheet: 'the drafting sheet', roSheetLabel: 'sheet',
+  roQuarter: 'quarter', roProvince: 'province', roCorridor: 'corridor',
+  roWithheld: '· withheld',
   hiddenModelled: 'Hidden. Every figure in this panel is modelled, and this view shows only what the sources state directly.',
   boardSi: 'Seasonal index by quarter', boardLevel: 'Flow by quarter',
   boardShare: 'Corridor share by quarter', boardWorker: 'Per worker per month',
@@ -106,6 +109,9 @@ th: {
   mShare: 'สัดส่วนเส้นทาง', mWorker: 'ต่อคนต่อเดือน',
   mYoy: 'เทียบปีก่อน',
   gAll: 'แสดงค่าจำลอง', gMeasured: 'เซพาะค่าที่วัดได้',
+  roOver: 'อยู่บน', roSheet: 'แผ่นเขียนแบบ', roSheetLabel: 'แผ่น',
+  roQuarter: 'ไตรมาส', roProvince: 'จังหวัด', roCorridor: 'เส้นทาง',
+  roWithheld: '· ระงับไว้',
   hiddenModelled: 'ซ่อนอยู่ ทุกตัวเลขในแผงนี้เป็นค่าจำลอง มุมมองนี้แสดงเฉพาะสิ่งที่แหล่งข้อมูลระบุโดยตรง',
   boardSi: 'ดัชนีตามฤดูกาลรายไตรมาส',
   boardLevel: 'มีลค่ารายไตรมาส',
@@ -173,6 +179,9 @@ ko: {
   mSi: '계절지수', mLevel: '분기 규모', mShare: '코리도 점유율',
   mWorker: '1인당 월 송금', mYoy: '전년 대비',
   gAll: '모형치 표시', gMeasured: '실측만',
+  roOver: '위치', roSheet: '제도 용지', roSheetLabel: '시트',
+  roQuarter: '분기', roProvince: '주', roCorridor: '코리도',
+  roWithheld: '· 보류됨',
   hiddenModelled: '숨김. 이 패널의 모든 수치는 모형치이고, 이 보기는 출처가 직접 밝힌 것만 보여준다.',
   boardSi: '분기별 계절지수', boardLevel: '분기별 규모', boardShare: '분기별 코리도 점유율',
   boardWorker: '1인당 월 송금', boardYoy: '전년 대비 증감',
@@ -529,7 +538,13 @@ function renderBoard() {
       const q = `${y}Q${n}`;
       const v = ser[q];
       if (v == null) {
-        h += `<div class="cell nd" title="${DQ[q] || state.corridor === 'ALL' ? '' : T('noRun')}">${T('none')}</div>`;
+        // A quarter the cross-check withheld is voided rather than left blank:
+        // the reading existed, it was rejected. Struck, so you can see it was.
+        const withheld = (DATA.meta.doe_disputed_quarters || []).includes(q)
+          && state.corridor !== 'ALL';
+        h += `<div class="cell nd${withheld ? ' void' : ''}" data-q="${q}"`
+          + ` title="${withheld ? T('roWithheld') : (DQ[q] || state.corridor === 'ALL' ? '' : T('noRun'))}">`
+          + `${withheld ? '' : T('none')}</div>`;
         continue;
       }
       rowSum += v; rowN++;
@@ -769,6 +784,26 @@ addEventListener('resize', () => {
   clearTimeout(chartRAF);
   chartRAF = setTimeout(renderChart, 160);
 });
+
+/* Opacity is the evidence grade. A sheet holding modelled figures stays
+   translucent so the squared ground reads through it; a measured sheet is
+   opaque. This is the A/B distinction drawn, not decoration. */
+function markTrace() {
+  const modelled = new Set();
+  if (!state.measuredOnly) {
+    ['rank', 'flows'].forEach(id => {
+      const el = document.getElementById(id);
+      const p = el && el.closest('.panel');
+      if (p) modelled.add(p);
+    });
+    if (state.corridor !== 'ALL') {
+      const b = document.getElementById('board');
+      const p = b && b.closest('.panel');
+      if (p) modelled.add(p);
+    }
+  }
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('trace', modelled.has(p)));
+}
 
 /* ── render: province map ─────────────────────────────────────────────
    Where the money leaves from. Work-permit holders by province, from the DOE
@@ -1057,7 +1092,7 @@ function paintChrome() {
 function renderAll() {
   paintChrome(); renderFacts(); renderControls(); renderBoard(); renderDetail();
   renderRank(); renderFlows(); renderContext(); renderChart(); renderMap();
-  renderTable(); renderAbout();
+  renderTable(); renderAbout(); markTrace();
   writeHash();
 }
 
@@ -1101,7 +1136,7 @@ document.addEventListener('input', e => {
   const box = document.getElementById('asmBox').open;
   renderControls(); document.getElementById('asmBox').open = box;
   renderBoard(); renderDetail(); renderRank(); renderFlows(); renderChart();
-  renderMap(); renderTable(); writeHash();
+  renderMap(); renderTable(); markTrace(); writeHash();
 });
 document.addEventListener('keydown', e => {
   const cell = e.target.closest && e.target.closest('.cell[data-q]');
@@ -1140,7 +1175,46 @@ function hideChartMark() {
   document.querySelectorAll('svg.chart .cross, svg.chart .hot')
     .forEach(el => { el.style.visibility = 'hidden'; });
 }
+/* The readout names what the pointer is over. On a plan drawing and a squared
+   grid that is a reading, so it is set in the annotation hand and sits on the
+   paper rather than on any sheet. One update per frame. */
+const RO = {x: document.getElementById('roX'), y: document.getElementById('roY'),
+            at: document.getElementById('roAt'), label: document.getElementById('roLabel')};
+let roFrame = false, roLast = null;
+function readout(e) {
+  if (!RO.x) return;
+  // Page coordinates, not viewport: the reading is a position on the drawing,
+  // which is what a coordinate readout on a plan is for. It also keeps rising
+  // as you scroll the sheet instead of resetting at every fold.
+  RO.x.textContent = String(Math.round(e.pageX)).padStart(4, '0');
+  RO.y.textContent = String(Math.round(e.pageY)).padStart(4, '0');
+  let what = T('roSheet'), kind = T('roOver');
+  const t = e.target && e.target.closest ? e.target : null;
+  if (t) {
+    const cell = t.closest('.cell[data-q]');
+    const path = t.closest('svg.map path[data-p]');
+    const row  = t.closest('#rank .row[data-c], #provRank .row[data-p]');
+    const flow = t.closest('.flow');
+    if (cell) { kind = T('roQuarter');
+      what = cell.dataset.q + (cell.classList.contains('nd') ? '  ' + T('roWithheld') : ''); }
+    else if (path) { const pv = PV_BY_CODE[path.dataset.p];
+      kind = T('roProvince'); what = pv ? (LANG === 'th' ? pv.th : pv.en) : path.dataset.p; }
+    else if (row && row.dataset.c) { const c = DATA.corridors.find(x => x.code === row.dataset.c);
+      kind = T('roCorridor'); what = c ? cname(c) : row.dataset.c; }
+    else if (row && row.dataset.p) { const pv = PV_BY_CODE[row.dataset.p];
+      kind = T('roProvince'); what = pv ? (LANG === 'th' ? pv.th : pv.en) : row.dataset.p; }
+    else if (flow) { kind = T('roCorridor');
+      what = (flow.querySelector('.fn') || {}).firstChild
+        ? flow.querySelector('.fn').firstChild.textContent.trim() : what; }
+    else { const panel = t.closest('.panel,.board,.hero,.about');
+      const h = panel && panel.querySelector('h1,h2');
+      if (h && h.textContent.trim()) { kind = T('roSheetLabel'); what = h.textContent.trim(); } }
+  }
+  if (what !== roLast) { RO.at.textContent = what; RO.label.textContent = kind; roLast = what; }
+}
+
 document.addEventListener('mousemove', e => {
+  if (!roFrame) { roFrame = true; requestAnimationFrame(() => { roFrame = false; readout(e); }); }
   if (!e.target.closest) { tip.classList.remove('on'); hideChartMark(); return; }
   const cell = e.target.closest('.cell[data-q]');
   if (cell) { hideChartMark(); showTip(cell.dataset.q, e); return; }
