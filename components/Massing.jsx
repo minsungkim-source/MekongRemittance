@@ -79,11 +79,16 @@ function Provinces({ geo, geom, model, progress, onPick, onHover }) {
   const rise = (geom ? geom.max : 230) * Math.sin(theta) * progress;
 
   return (
+    /* The group used to grow 16% as it lifted, which pushed its half-width from
+       245 to 284 against a frame half-width of 251 -- so at full scroll the
+       country's east and west edges were being cut off the sides. Growing the
+       drawing is the camera's job, and the camera can do it within what the
+       frame actually shows: the dolly above runs 0.88 to 1, which reads as the
+       same swell and crops nothing. The group only tilts and rises. */
     <group
       ref={group}
       rotation-x={-theta}
       position-y={-rise / 2}
-      scale={1 + 0.16 * progress}
     >
       {shapes.map(({ code, geometry }) => {
         const m = model && model.byCode ? model.byCode[code] : null;
@@ -111,9 +116,20 @@ function Provinces({ geo, geom, model, progress, onPick, onHover }) {
   );
 }
 
+/* The scroll dolly. The plan spans the full width of the frame -- its bounding
+   box sits at x 6..496 of 502 -- so any zoom above 1 would cut the country's
+   east and west extremes off the sides. The move is therefore entirely below
+   1: the drawing opens small with air around it and closes at exactly 1,
+   filling the frame as the columns finish rising. Nothing is ever cropped. */
+const ZOOM_FROM = 0.88;
+const ZOOM_TO = 1;
+/* Smoothstep, so the push has no corner at either end -- it leaves rest and
+   arrives at rest, which is what keeps a scrubbed move from feeling mechanical. */
+const ease = (t) => t * t * (3 - 2 * t);
+
 /* The camera has to cover the plan plus the headroom the columns rise into --
    the same box the SVG reserves in its viewBox -- or the drawing stretches. */
-function Frame({ geom, deps }) {
+function Frame({ geom, progress, deps }) {
   const { camera, size, invalidate, advance } = useThree();
   useEffect(() => {
     if (!geom) return;
@@ -124,9 +140,10 @@ function Frame({ geom, deps }) {
     camera.bottom = -V / 2;
     camera.near = -4000;
     camera.far = 4000;
+    camera.zoom = ZOOM_FROM + (ZOOM_TO - ZOOM_FROM) * ease(progress);
     camera.updateProjectionMatrix();
     invalidate();
-  }, [camera, geom, size, invalidate]);
+  }, [camera, geom, size, invalidate, progress]);
 
   // one frame whenever the scroll scalar or the model moves
   useEffect(() => { invalidate(); }, [invalidate, deps]);
@@ -135,8 +152,15 @@ function Frame({ geom, deps }) {
   // it, but a headless check cannot rely on requestAnimationFrame firing.
   useEffect(() => {
     window.__massAdvance = () => advance(performance.now());
-    return () => { delete window.__massAdvance; };
-  }, [advance]);
+    window.__massCam = () => ({
+      zoom: camera.zoom,
+      halfW: (camera.right - camera.left) / 2,
+      halfV: (camera.top - camera.bottom) / 2,
+      seesW: (camera.right - camera.left) / camera.zoom,
+      seesV: (camera.top - camera.bottom) / camera.zoom,
+    });
+    return () => { delete window.__massAdvance; delete window.__massCam; };
+  }, [advance, camera]);
   return null;
 }
 
@@ -179,7 +203,8 @@ export default function Massing({ onPick, onHover }) {
         gl.domElement.addEventListener('webglcontextlost', () => setOk(false), { once: true });
       }}
     >
-      <Frame geom={geom} deps={`${progress}|${model && model.month}|${model && model.metric}`} />
+      <Frame geom={geom} progress={progress}
+        deps={`${progress}|${model && model.month}|${model && model.metric}`} />
       <ambientLight intensity={0.86} />
       <directionalLight position={[-0.45, 1, 0.75]} intensity={0.62} />
       <directionalLight position={[0.6, 0.3, -0.5]} intensity={0.22} />
