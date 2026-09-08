@@ -12,6 +12,9 @@ import MapLayer from '@/components/MapLayer';
 export default function Page() {
   return (
     <>
+      {/* How far down the page you are. Fixed, 2px, and the only piece of
+          chrome that follows the reader. */}
+      <div className="readbar" aria-hidden="true"><i id="readfill" /></div>
       <div className="wrap">
         <section className="hero">
           <div className="hbar">
@@ -91,12 +94,17 @@ export default function Page() {
         </div>
 
         <div className="panel" id="mapPanel">
-          <div className="ptitle">
-            <h2 id="mapTitle" />
-            <div className="chips" id="mapChips" />
-            <span className="g gA" id="mapGrade">A</span>
+          {/* The drawing is 910px tall, so by the time you are reading the
+              south of the country the month and the metric have scrolled away.
+              The head stays. */}
+          <div className="maphead">
+            <div className="ptitle">
+              <h2 id="mapTitle" />
+              <div className="chips" id="mapChips" />
+              <span className="g gA" id="mapGrade">A</span>
+            </div>
+            <div className="monthbar" id="monthBar" />
           </div>
-          <div className="monthbar" id="monthBar" />
           <div className="mapcols">
             <MapLayer />
             <div>
