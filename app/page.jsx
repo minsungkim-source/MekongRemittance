@@ -41,6 +41,9 @@ export default function Page() {
             <div className="agrid" id="agrid" />
             <p className="hint" id="lAssumeHint" />
           </details>
+          {/* The corridor, metric and evidence controls rewrite every figure on
+              the page. On screen that is obvious; to a reader it was silent. */}
+          <p className="sronly" id="status" role="status" aria-live="polite" />
         </div>
 
         <div className="cols">
@@ -108,7 +111,7 @@ export default function Page() {
         <div className="panel">
           <div className="ptitle"><h2 id="tblTitle" /><span className="lab" id="tblHint" /></div>
           <div className="scroll tallscroll" data-lenis-prevent>
-            <table id="tbl">
+            <table id="tbl" aria-labelledby="tblTitle">
               <thead><tr id="thead" /></thead>
               <tbody id="tbody" />
             </table>

@@ -4,13 +4,25 @@
    canvas over it. Siblings, so replacing the plan's markup cannot destroy the
    canvas. Hover and click on the canvas are forwarded to the same handlers the
    plan's paths use, so the two layers behave identically. */
-import { useCallback } from 'react';
+import { Component, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 
 /* three and R3F are ~350 kB of the bundle, and a reader who never scrolls to
    the drawing never needs them. Split out, client-only: the SVG plan is what
    the page ships with and the canvas arrives when this component mounts. */
 const Massing = dynamic(() => import('@/components/Massing'), { ssr: false });
+
+/* The webgl pre-check inside Massing says a context can be created; it does not
+   promise R3F will succeed in creating one, and a throw during render would
+   take the whole page down with it. Failing here just unmounts the canvas:
+   .glwrap goes away, `:has(.glwrap)` stops matching, and the SVG plan -- the
+   same drawing without the extrusion -- is visible again. */
+class MassingBoundary extends Component {
+  constructor(props) { super(props); this.state = { failed: false }; }
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(err) { console.warn('massing disabled:', err && err.message); }
+  render() { return this.state.failed ? null : this.props.children; }
+}
 
 export default function MapLayer() {
   const pick = useCallback((code) => {
@@ -31,7 +43,9 @@ export default function MapLayer() {
   return (
     <div className="mapbox" id="mapHost">
       <div id="mapPlan" />
-      <Massing onPick={pick} onHover={hover} />
+      <MassingBoundary>
+        <Massing onPick={pick} onHover={hover} />
+      </MassingBoundary>
     </div>
   );
 }

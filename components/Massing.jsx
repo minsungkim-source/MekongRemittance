@@ -159,14 +159,25 @@ export default function Massing({ onPick, onHover }) {
   if (!ok || !geom) return null;
 
   return (
-    <div className="glwrap" style={{ aspectRatio: `${geom.w} / ${geom.h + geom.head}` }}>
+    /* The canvas re-presents the plan that is already in the accessibility tree
+       as a labelled image, and the ranking beside it carries the same figures
+       as text. A second, unlabelled graphic would only be noise to a reader. */
+    <div className="glwrap" aria-hidden="true"
+      style={{ aspectRatio: `${geom.w} / ${geom.h + geom.head}` }}>
     <Canvas
       orthographic
       frameloop="demand"
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
       style={{ width: '100%', height: '100%' }}
-      onCreated={({ gl }) => gl.setClearAlpha(0)}
+      onCreated={({ gl }) => {
+        gl.setClearAlpha(0);
+        /* A mobile browser drops the GL context under memory pressure or when
+           the tab is backgrounded for long enough. The canvas then sits blank
+           over an SVG that CSS has hidden, which is a map showing nothing --
+           so stand down and let the plan come back. */
+        gl.domElement.addEventListener('webglcontextlost', () => setOk(false), { once: true });
+      }}
     >
       <Frame geom={geom} deps={`${progress}|${model && model.month}|${model && model.metric}`} />
       <ambientLight intensity={0.86} />
