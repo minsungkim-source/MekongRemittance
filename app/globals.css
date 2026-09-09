@@ -526,13 +526,18 @@ td.mod{background-image:repeating-linear-gradient(45deg,
 /* 3. Plates settle as they arrive. A 9px move and nothing else -- no fade,
       because a panel you cannot read yet is a panel that is not there. */
 /* Both transitions, not just the new one: this rule comes after the hover
-   shadow's and a bare `transition` here would have thrown that away. */
-.panel{transform:translateY(9px);
+   shadow's and a bare `transition` here would have thrown that away.
+   The map panel is left out on purpose. It holds the sticky head, and a
+   transform on an ancestor makes that head position against the panel rather
+   than the viewport -- harmless once the panel has settled, but a scroll fast
+   enough to reach the panel mid-settle would have the head 9px out and moving.
+   One plate not settling is cheaper than that. */
+.panel:not(#mapPanel){transform:translateY(9px);
   transition:box-shadow .16s ease,transform .55s cubic-bezier(.22,.61,.36,1)}
 .panel.settled{transform:none}
 
 @media (prefers-reduced-motion:reduce){
-  .panel{transform:none;transition:box-shadow .16s ease}
+  .panel:not(#mapPanel){transform:none;transition:box-shadow .16s ease}
   .readbar i{transition:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
