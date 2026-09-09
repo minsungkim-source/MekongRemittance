@@ -14,94 +14,81 @@
    Light is the base set; dark is redefined twice so that the OS setting
    and an explicit theme stamp both win in the right direction.        */
 :root{
-  /* The ground is squared drafting paper; every panel is a sheet laid on it.
-     --grid/--grid-2 are the two line weights of the squares, vertical
-     slightly darker than horizontal, the way ruled paper actually prints. */
-  --paper:#e7dfcc; --paper-2:#ded5be; --surface:#fbf8f1;
-  --grid:#d6cdb6; --grid-2:#dfd7c2; --graphite:rgba(26,30,34,.055);
-  --ink:#1a1e22; --ink-2:#454e56; --ink-3:#636b71;   /* 5.11:1 on --surface */
-  --rule:#cdc3ab; --rule-2:#e3dbc8; --hair:#1a1e22;
-  --petrol:#27406e; --petrol-2:#4a6a9e; --ember:#b4531f; --ember-2:#c9702f;
-  /* Figures sit on these fills, so every step is measured against the ink it
-     carries, not chosen by eye. Three steps were short: s4 read 3.81, d1 3.47
-     and d5 4.37. d1 needed only the other ink (4.55). s4 lifts 6% to #be733b
-     and takes the dark ink (4.55), which also leaves the simpler rule that
-     light ink appears on the darkest step alone. d5 darkens 2% to #b6571d
-     (4.53). Neighbour separation across the ramp is unchanged within 0.15. */
-  --s1:#f2e4cd; --s2:#e6bd8e; --s3:#d6935a; --s4:#be733b; --s5:#91410f;
-  --s1t:#1a1e22; --s2t:#1a1e22; --s3t:#1a1e22; --s4t:#1a1e22; --s5t:#fbf8f1;
-  --d1:#5b8ba8; --d2:#b3c8d2; --d3:#e6e0d2; --d4:#eab077; --d5:#b6571d;
-  --d1t:#1a1e22; --d2t:#1a1e22; --d3t:#454e56; --d4t:#1a1e22; --d5t:#fbf8f1;
-  --nodata:#ded5be; --nd-ink:#555e65; --hatch:rgba(180,83,31,.16);
-  --on-petrol:#fbf8f1;
+  /* A white ground and flat tonal surfaces: no squares, no frames, no drop
+     shadows. Separation is carried by tone and radius alone. */
+  --paper:#ffffff; --paper-2:#f5f5f4; --surface:#ffffff;
+  --panel:#f5f5f4; --panel-2:#e7e5e4;
+  --grid:transparent; --grid-2:transparent; --graphite:transparent;
+  --ink:#1c1917; --ink-2:#57534d; --ink-3:#6b625b;
+  /* --ink-3 is #6b625b, not stone-500 #79716b: that read 4.39:1 on --panel
+     and 3.81 on --panel-2. This one holds 5.96 / 5.46 / 4.75. */
+  --rule:#e7e5e4; --rule-2:#f0efee; --hair:#d6d3d1;
+  /* Structure is ink now that there are no blueprint frames to draw. */
+  --petrol:#1c1917; --petrol-2:#57534d;
+  /* The accent fills at #00a63e but never sets type: it is 3.22:1 on white.
+     Anything green that has to be read uses --ember-2 at 5.46. */
+  --ember:#00a63e; --ember-2:#087a35;
+  /* Both ramps re-derived in green and measured against the ink each step
+     carries. Lowest in the set is 5.20. */
+  --s1:#eaf6ea; --s2:#c2e5c0; --s3:#8ccb8e; --s4:#3f9e57; --s5:#14683a;
+  --s1t:#1c1917; --s2t:#1c1917; --s3t:#1c1917; --s4t:#1c1917; --s5t:#ffffff;
+  --d1:#a83a12; --d2:#eda67c; --d3:#e7e5e4; --d4:#8ccb8e; --d5:#0f7336;
+  --d1t:#ffffff; --d2t:#1c1917; --d3t:#1c1917; --d4t:#1c1917; --d5t:#ffffff;
+  --nodata:#f5f5f4; --nd-ink:#6b625b; --hatch:rgba(0,166,62,.14);
+  --on-petrol:#ffffff;
   /* Noto Sans Thai sits in every stack so ฿ (U+0E3F) has a designed home
      instead of falling back mid-word to whatever the OS offers. */
   --mono:"Geist Mono","Noto Sans Thai",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:"IBM Plex Sans","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-  --cond:"IBM Plex Sans Condensed","IBM Plex Sans","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
-  /* the annotation hand -- marginalia only, never data */
-  --hand:"Architects Daughter","Noto Sans Thai",var(--mono);
+  --sans:"Inter","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --cond:"Inter","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
+  /* No annotation hand any more; notes are set in the text face. */
+  --hand:"Inter","Noto Sans Thai",-apple-system,Helvetica,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  /* dark is the same table under a lamp: the paper goes to board, the squares
-     stay just visible, and the blueprint line lifts to carry on the dark. */
-  --paper:#14171a; --paper-2:#1f2429; --surface:#1b2024;
-  --grid:#232a2f; --grid-2:#1e2429; --graphite:rgba(234,236,232,.045);
-  --ink:#eaece8; --ink-2:#a9b2b7; --ink-3:#8b959c;   /* 5.38:1 on --surface */
-  --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
-  --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
-  --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  /* Measured on the swatches, not picked by eye: the figure sits on the fill,
-     so each step takes whichever ink actually clears 4.5:1 against it. On the
-     dark ink s3 read 2.62 and s4 4.36; both clear on the other side, 5.27 and
-     4.78. */
-  --s1t:#eaece8; --s2t:#eaece8; --s3t:#eaece8; --s4t:#14171a; --s5t:#1b2024;
-  /* d1 is the diverging scale's "fell" extreme, and no ink cleared 4.5:1 on the
-     old #3f7290 -- 4.39 light, 3.14 dark -- so the swatch had to move. Lifting
-     it to #5e89a2 with the dark ink reads 4.78, and separates it from d2 better
-     than darkening would have (2.58 against 1.80). It now matches d5, the other
-     extreme, which already pairs a saturated fill with dark ink. */
-  --d1:#5e89a2; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
-  --on-petrol:#14171a;
-  --d1t:#14171a; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
-  --nodata:#232a2d; --nd-ink:#8b959c; --hatch:rgba(218,132,82,.18);
+  /* Dark is the same flat world with the tones inverted: a near-black ground,
+     stone surfaces lifted a step, and a brighter green so the accent survives
+     on the dark. */
+  --paper:#0c0a09; --paper-2:#1c1917; --surface:#1c1917;
+  --panel:#1c1917; --panel-2:#292524;
+  --grid:transparent; --grid-2:transparent; --graphite:transparent;
+  --ink:#fafaf9; --ink-2:#a6a09b; --ink-3:#9a928b;
+  --rule:#292524; --rule-2:#221f1d; --hair:#44403c;
+  --petrol:#fafaf9; --petrol-2:#a6a09b;
+  --ember:#22c55e; --ember-2:#4ade80;
+  --s1:#12291a; --s2:#1b4a2c; --s3:#2a7345; --s4:#3f9e57; --s5:#6fce85;
+  --s1t:#fafaf9; --s2t:#fafaf9; --s3t:#fafaf9; --s4t:#0c0a09; --s5t:#0c0a09;
+  --d1:#e0703c; --d2:#8a3d1c; --d3:#2b2825; --d4:#1b5c31; --d5:#5fc47c;
+  --d1t:#0c0a09; --d2t:#fafaf9; --d3t:#fafaf9; --d4t:#fafaf9; --d5t:#0c0a09;
+  --nodata:#232020; --nd-ink:#a6a09b; --hatch:rgba(34,197,94,.18);
+  --on-petrol:#0c0a09;
 }}
 :root[data-theme="dark"]{
-  /* dark is the same table under a lamp: the paper goes to board, the squares
-     stay just visible, and the blueprint line lifts to carry on the dark. */
-  --paper:#14171a; --paper-2:#1f2429; --surface:#1b2024;
-  --grid:#232a2f; --grid-2:#1e2429; --graphite:rgba(234,236,232,.045);
-  --ink:#eaece8; --ink-2:#a9b2b7; --ink-3:#8b959c;   /* 5.38:1 on --surface */
-  --rule:#2e3639; --rule-2:#252c30; --hair:#4e585d;
-  --petrol:#6e93c4; --petrol-2:#8fb0d8; --ember:#da8452; --ember-2:#c9702f;
-  --s1:#3a2415; --s2:#5c3a20; --s3:#86552c; --s4:#b3763d; --s5:#d99a55;
-  /* Measured on the swatches, not picked by eye: the figure sits on the fill,
-     so each step takes whichever ink actually clears 4.5:1 against it. On the
-     dark ink s3 read 2.62 and s4 4.36; both clear on the other side, 5.27 and
-     4.78. */
-  --s1t:#eaece8; --s2t:#eaece8; --s3t:#eaece8; --s4t:#14171a; --s5t:#1b2024;
-  /* d1 is the diverging scale's "fell" extreme, and no ink cleared 4.5:1 on the
-     old #3f7290 -- 4.39 light, 3.14 dark -- so the swatch had to move. Lifting
-     it to #5e89a2 with the dark ink reads 4.78, and separates it from d2 better
-     than darkening would have (2.58 against 1.80). It now matches d5, the other
-     extreme, which already pairs a saturated fill with dark ink. */
-  --d1:#5e89a2; --d2:#2c4855; --d3:#2b3235; --d4:#7d4c22; --d5:#c9722f;
-  --on-petrol:#14171a;
-  --d1t:#14171a; --d2t:#eaece8; --d3t:#a9b2b7; --d4t:#eaece8; --d5t:#14171a;
-  --nodata:#232a2d; --nd-ink:#8b959c; --hatch:rgba(218,132,82,.18);
+  /* Dark is the same flat world with the tones inverted: a near-black ground,
+     stone surfaces lifted a step, and a brighter green so the accent survives
+     on the dark. */
+  --paper:#0c0a09; --paper-2:#1c1917; --surface:#1c1917;
+  --panel:#1c1917; --panel-2:#292524;
+  --grid:transparent; --grid-2:transparent; --graphite:transparent;
+  --ink:#fafaf9; --ink-2:#a6a09b; --ink-3:#9a928b;
+  --rule:#292524; --rule-2:#221f1d; --hair:#44403c;
+  --petrol:#fafaf9; --petrol-2:#a6a09b;
+  --ember:#22c55e; --ember-2:#4ade80;
+  --s1:#12291a; --s2:#1b4a2c; --s3:#2a7345; --s4:#3f9e57; --s5:#6fce85;
+  --s1t:#fafaf9; --s2t:#fafaf9; --s3t:#fafaf9; --s4t:#0c0a09; --s5t:#0c0a09;
+  --d1:#e0703c; --d2:#8a3d1c; --d3:#2b2825; --d4:#1b5c31; --d5:#5fc47c;
+  --d1t:#0c0a09; --d2t:#fafaf9; --d3t:#fafaf9; --d4t:#fafaf9; --d5t:#0c0a09;
+  --nodata:#232020; --nd-ink:#a6a09b; --hatch:rgba(34,197,94,.18);
+  --on-petrol:#0c0a09;
 }
 
-/* ── drafting instruments ────────────────────────────────────────────
-   A coordinate readout, because the page is a plan and a squared grid and
-   knowing where the cursor sits is a reading, not chrome. It names what is
-   under the pointer, so it doubles as the map's and the grid's status line. */
+/* ── cursor readout ──────────────────────────────────────────────────
+   Kept, but no longer a drafting instrument: a plain flat chip. */
 .rule-out{position:fixed;left:14px;bottom:12px;z-index:30;pointer-events:none;
-  font-family:var(--hand);font-size:12.5px;line-height:1.45;color:var(--ink-2);
+  font-family:var(--mono);font-size:11.5px;line-height:1.45;color:var(--ink-2);
   display:flex;gap:14px;align-items:baseline;
-  background:var(--paper);padding:5px 10px 4px;border:1px solid var(--rule);
-  box-shadow:2px 2px 0 var(--graphite)}
+  background:var(--panel);padding:7px 12px;border-radius:8px;border:0}
 .rule-out i{font-style:normal;color:var(--ink-3)}
-.rule-out b{font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
+.rule-out b{font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
 .rule-out .at{max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (hover:none){.rule-out{display:none}}
 @media (max-width:760px){.rule-out{display:none}}
@@ -112,52 +99,42 @@
 .cell.void::after{content:"";position:absolute;left:8%;right:8%;top:50%;
   height:6px;transform:translateY(-3px);
   background:no-repeat center/100% 100%
-    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='6' viewBox='0 0 60 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4.3C11 2.1 22 4.6 33 2.4 43 .6 52 3.4 59 1.7' stroke='%23b4531f' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")}
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='6' viewBox='0 0 60 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4.3C11 2.1 22 4.6 33 2.4 43 .6 52 3.4 59 1.7' stroke='%23a83a12' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);
-  font-family:var(--sans);font-size:15px;line-height:1.7;
-  background-image:
-    linear-gradient(90deg,var(--grid) 1px,transparent 0),
-    linear-gradient(var(--grid-2) 1px,transparent 0);
-  /* The squares are attachment:fixed, so they belong to the table rather than
-     to the sheets and the plates already slide over them as you scroll. */
-  background-size:15px 15px,15px 15px;
-  background-attachment:fixed,fixed}
-/* A 4x2 dot screen over the squares: the grain of something printed, not a
-   photograph of paper. Fixed, so it does not travel with the content. */
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='2' viewBox='0 0 4 2'%3E%3Ccircle cx='1' cy='1' r='.6' fill='%23000'/%3E%3C/svg%3E");
-  background-size:4px 2px;opacity:.05;mix-blend-mode:multiply}
+  font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"cv05","ss01"}
+/* No dot screen: the ground is plain white now. */
 .wrap{position:relative;z-index:1}
 .wrap{max-width:1320px;margin:0 auto;padding:34px 24px 90px;
   display:flex;flex-direction:column;gap:20px}
 @media (max-width:760px){.wrap{padding:16px 12px 56px;gap:14px}}
 
-.klab{display:inline-block;background:var(--ink);color:var(--surface);
+.klab{display:inline-block;background:var(--ink);color:var(--paper);border-radius:6px;
   font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.19em;
   text-transform:uppercase;padding:3px 8px 2px;vertical-align:2px}
 .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.19em;
   text-transform:uppercase;color:var(--ink-3)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.board{background:var(--surface);border:4px solid var(--petrol)}
-/* Sheet: an overlay laid on the drafting paper, lifted by a hard offset
-   shadow rather than a soft one -- paper has an edge, not a glow. */
-.board,.panel,.hero,.controls,.about{box-shadow:3px 3px 0 var(--graphite)}
-.panel{position:relative;transition:box-shadow .16s ease}
-.panel:hover{box-shadow:6px 6px 0 var(--graphite)}
-/* Trace: a modelled sheet. Translucent, so the squared ground reads through
-   it and a modelled panel is visibly a layer over the measured page. The
-   dashed edge is the drafting convention for a line that is not surveyed. */
-.panel.trace{background:color-mix(in srgb,var(--surface) 80%,transparent)}
-.panel.trace::after{content:"";position:absolute;inset:0;pointer-events:none;
-  border:1px dashed var(--ember);opacity:.3}
+.board{background:var(--panel);border:0;border-radius:12px}
+/* Flat cards. Nothing casts a shadow and nothing is framed -- a card is a
+   step of tone against the white, with a 12px corner. */
+.board,.panel,.hero,.controls,.about{box-shadow:none}
+.panel{position:relative;transition:background .16s ease}
+.panel:hover{background:var(--panel-2)}
+/* Trace: a modelled sheet. The dashed drafting edge is gone with the rest of
+   the instruments, so the distinction is carried by a green cast in the
+   card's own ground -- still visible, no longer a frame. */
+.panel.trace{background:color-mix(in srgb,var(--ember) 7%,var(--panel))}
+.panel.trace:hover{background:color-mix(in srgb,var(--ember) 11%,var(--panel))}
 .pad{padding:16px 20px 20px}
 @media (max-width:760px){.pad{padding:13px 15px 16px}}
 
 /* ── masthead ─────────────────────────────────────────────────────── */
-.hero{background:var(--surface);border:10px solid var(--petrol)}
+.hero{background:var(--panel);border:0;border-radius:16px}
 @media (max-width:760px){.hero{border-width:7px}}
 .hbar .lab{font-family:var(--hand);font-size:12.5px;letter-spacing:.03em;
   text-transform:none}
@@ -166,10 +143,11 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   background:color-mix(in srgb,var(--paper-2) 55%,var(--surface))}
 .hbar b{font-weight:600}
-h1{font-family:var(--cond);font-weight:700;font-size:clamp(32px,6vw,66px);
-  line-height:.98;letter-spacing:-.032em;margin:0;padding:22px 22px 8px;
+h1{font-family:var(--cond);font-weight:600;font-size:clamp(34px,6vw,64px);
+  line-height:1.02;letter-spacing:-.05em;margin:0;padding:26px 26px 10px;
   text-wrap:balance;text-transform:none}
-.dek{margin:0;padding:0 22px 20px;max-width:68ch;color:var(--ink-2);font-size:15.5px}
+.dek{margin:0;padding:0 26px 24px;max-width:66ch;color:var(--ink-2);
+  font-size:16px;line-height:1.6;letter-spacing:-.008em}
 .dek b{color:var(--ink);font-weight:600}
 /* Wide enough for a standfirst: two columns of ~48 characters, the way the
    printed page it borrows from would set it, rather than one narrow column
@@ -194,21 +172,21 @@ h1{font-family:var(--cond);font-weight:700;font-size:clamp(32px,6vw,66px);
 .fact .s{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:1px}
 
 /* ── controls ─────────────────────────────────────────────────────── */
-.controls{background:var(--surface);border:1.5px solid var(--hair);
-  padding:13px 20px 15px;display:flex;flex-direction:column;gap:10px}
+.controls{background:var(--panel);border:0;border-radius:12px;
+  padding:16px 22px 18px;display:flex;flex-direction:column;gap:12px}
 .ctl{display:flex;gap:11px;align-items:flex-start;flex-wrap:wrap}
 .ctl > .klab{min-width:86px;margin-top:2px}
 .chips{display:flex;gap:5px;flex-wrap:wrap}
-.chip{font-family:var(--mono);font-size:11px;padding:3px 9px 2px;cursor:pointer;
-  background:var(--paper-2);border:1px solid var(--rule);color:var(--ink-2);
-  white-space:nowrap}
-.chip:hover{border-color:var(--petrol);color:var(--ink)}
+.chip{font-family:var(--mono);font-size:11.5px;padding:5px 11px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--rule);border-radius:8px;
+  color:var(--ink-2);white-space:nowrap;transition:background .12s,color .12s}
+.chip:hover{background:var(--panel-2);color:var(--ink)}
 .chip[aria-pressed="true"]{background:var(--petrol);border-color:var(--petrol);
   color:var(--on-petrol);font-weight:500}
 .chip.dim{opacity:.45;cursor:not-allowed}
 details.asm{border-top:1px solid var(--rule-2);padding-top:9px}
 details.asm summary{font-family:var(--mono);font-size:11px;letter-spacing:.05em;
-  cursor:pointer;color:var(--ember);list-style:none}
+  cursor:pointer;color:var(--ember-2);list-style:none}
 details.asm summary::-webkit-details-marker{display:none}
 details.asm summary::before{content:"▸ ";font-size:9px}
 details.asm[open] summary::before{content:"▾ "}
@@ -228,8 +206,8 @@ details.asm[open] summary::before{content:"▾ "}
   font-variant-numeric:tabular-nums}
 /* Notes under each plate are prose, not labels: they get the text face at a
    readable size. Mono stays where it earns its keep -- figures and labels. */
-.hint{font-family:var(--hand);font-size:14.5px;line-height:1.58;
-  color:var(--ink-2);margin:7px 0 0;max-width:70ch}
+.hint{font-family:var(--sans);font-size:14px;line-height:1.6;
+  color:var(--ink-2);margin:9px 0 0;max-width:68ch;letter-spacing:-.005em}
 .hint b{color:var(--ink);font-weight:600}
 
 /* ── two-column body ──────────────────────────────────────────────── */
@@ -239,15 +217,16 @@ details.asm[open] summary::before{content:"▾ "}
    whole page sideways on a phone. */
 @media (max-width:980px){.cols{grid-template-columns:minmax(0,1fr)}}
 .cols > div{min-width:0;display:flex;flex-direction:column;gap:20px}
-.panel{background:var(--surface);border:4px solid var(--petrol);padding:12px 16px 15px}
+.panel{background:var(--panel);border:0;border-radius:12px;padding:18px 22px 20px}
 /* Two weights of frame, so the page reads as plates with margin notes beside
    them rather than eight equal boxes shouting at once. */
-.panel.sub{border:1.5px solid var(--hair);padding:11px 15px 14px}
+.panel.sub{background:var(--surface);border:1px solid var(--rule);padding:16px 20px 18px}
 .ptitle{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
   flex-wrap:wrap;margin-bottom:9px}
-h2{font-family:var(--cond);font-weight:600;font-size:19px;line-height:1.2;
-  letter-spacing:-.012em;margin:0}
-h3{font-family:var(--cond);font-weight:600;font-size:15px;margin:16px 0 2px}
+h2{font-family:var(--cond);font-weight:600;font-size:20px;line-height:1.18;
+  letter-spacing:-.028em;margin:0}
+h3{font-family:var(--cond);font-weight:600;font-size:15.5px;
+  letter-spacing:-.02em;margin:16px 0 2px}
 
 /* evidence badges */
 .g{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:600;
@@ -456,12 +435,12 @@ td.mod{background-image:repeating-linear-gradient(45deg,
 .srctable{min-width:720px}
 
 /* ── colophon ─────────────────────────────────────────────────────── */
-.about{background:var(--surface);border:4px solid var(--petrol)}
+.about{background:var(--panel);border:0;border-radius:12px}
 .dirrow{display:grid;grid-template-columns:104px minmax(0,1fr);
   border-bottom:1px solid var(--rule-2)}
 .dirrow:last-child{border-bottom:0}
-.dirnum{font-family:var(--cond);font-weight:700;font-size:42px;line-height:1;
-  letter-spacing:-.03em;color:var(--rule);padding:18px 0 0 22px}
+.dirnum{font-family:var(--cond);font-weight:600;font-size:42px;line-height:1;
+  letter-spacing:-.05em;color:var(--hair);padding:18px 0 0 22px}
 .dircell{padding:17px 22px 20px 2px;min-width:0}
 /* The colophon is the longest reading on the page. It was set in mono at
    11px; prose that long belongs in the text face at a real size. */
@@ -533,11 +512,11 @@ td.mod{background-image:repeating-linear-gradient(45deg,
    enough to reach the panel mid-settle would have the head 9px out and moving.
    One plate not settling is cheaper than that. */
 .panel:not(#mapPanel){transform:translateY(9px);
-  transition:box-shadow .16s ease,transform .55s cubic-bezier(.22,.61,.36,1)}
+  transition:background .16s ease,transform .55s cubic-bezier(.22,.61,.36,1)}
 .panel.settled{transform:none}
 
 @media (prefers-reduced-motion:reduce){
-  .panel:not(#mapPanel){transform:none;transition:box-shadow .16s ease}
+  .panel:not(#mapPanel){transform:none;transition:background .16s ease}
   .readbar i{transition:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
