@@ -40,7 +40,10 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href='https://fonts.googleapis.com/css2?family=Architects+Daughter&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Geist+Mono:wght@400;500;600&display=swap' />
+        {/* Inter carries the whole page now -- text, display and the numbers in
+            the colophon. Geist Mono stays for figures and labels. The drafting
+            hand and both Plex cuts are gone with the drafting language. */}
+        <link rel="stylesheet" href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap' />
         {/* baht sign only: it is not in the Latin Plex cuts */}
         <link rel="stylesheet" href='https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600&text=%E0%B8%BF&display=swap' />
       </head>
