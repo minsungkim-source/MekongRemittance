@@ -141,7 +141,7 @@ body{margin:0;background:var(--paper);color:var(--ink);
 .hbar{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
   flex-wrap:wrap;padding:9px 22px;border-bottom:1.5px solid var(--hair);
   font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-  background:color-mix(in srgb,var(--paper-2) 55%,var(--surface))}
+  background:var(--panel-2)}
 .hbar b{font-weight:600}
 h1{font-family:var(--cond);font-weight:600;font-size:clamp(34px,6vw,64px);
   line-height:1.02;letter-spacing:-.05em;margin:0;padding:26px 26px 10px;
@@ -308,8 +308,8 @@ h3{font-family:var(--cond);font-weight:600;font-size:15.5px;
 .rank{border-top:1px solid var(--rule-2)}
 .rank .row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:9px;
   align-items:center;padding:6px 0;border-bottom:1px solid var(--rule-2);cursor:pointer}
-.rank .row:hover{background:var(--paper-2)}
-.rank .row.sel{background:var(--paper-2);box-shadow:inset 3px 0 0 var(--petrol)}
+.rank .row:hover{background:var(--panel-2)}
+.rank .row.sel{background:var(--panel-2);box-shadow:inset 3px 0 0 var(--petrol)}
 .rank .i{font-family:var(--mono);font-size:10px;color:var(--ink-3);text-align:right}
 .rank .n{font-family:var(--mono);font-size:11.5px;min-width:0;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
@@ -324,7 +324,7 @@ h3{font-family:var(--cond);font-weight:600;font-size:15.5px;
 .flow .fn{font-family:var(--cond);font-size:15px;font-weight:600}
 .flow .fn span{display:block;font-family:var(--mono);font-size:9.5px;font-weight:400;
   color:var(--ink-3)}
-.flow .fb{position:relative;height:20px;background:var(--paper-2)}
+.flow .fb{position:relative;height:20px;background:var(--panel-2);border-radius:4px}
 .flow .fb i{position:absolute;left:0;top:0;bottom:0;background:var(--s4)}
 .flow .fv{font-family:var(--mono);font-size:11.5px;text-align:right;
   font-variant-numeric:tabular-nums}
@@ -422,11 +422,11 @@ th[aria-sort]{color:var(--ink)}
 .sortbtn:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 td{border-bottom:1px solid var(--rule-2);padding:5px 9px;text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-tbody tr:hover{background:var(--paper-2)}
+tbody tr:hover{background:var(--panel-2)}
 /* Column headers double as the sort controls, so they stay put while the
    sixty-odd rows scroll under them. */
 .tallscroll{max-height:min(70vh,660px);overflow:auto}
-.tallscroll th{position:sticky;top:0;z-index:2;background:var(--surface);
+.tallscroll th{position:sticky;top:0;z-index:2;background:var(--panel);
   border-bottom:0;box-shadow:inset 0 -1.5px 0 var(--hair)}
 td.mod{background-image:repeating-linear-gradient(45deg,
   var(--hatch) 0 1.5px,transparent 1.5px 6px)}
@@ -463,7 +463,7 @@ td.mod{background-image:repeating-linear-gradient(45deg,
   .dircell{padding:4px 18px 16px}
 }
 .banner{font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--ember);
-  border-left:3px solid var(--ember);background:var(--paper-2);padding:8px 13px;
+  border-left:3px solid var(--ember);background:var(--panel-2);padding:8px 13px;
   margin:0 0 11px}
 .tip{position:fixed;pointer-events:none;z-index:40;background:var(--surface);
   border:1.5px solid var(--hair);padding:8px 11px;max-width:290px;opacity:0;
@@ -482,6 +482,18 @@ td.mod{background-image:repeating-linear-gradient(45deg,
    take it out of the accessibility tree along with the announcement. */
 .sronly{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* The tone ladder, so none of the above drifts back onto the wrong step:
+   --paper   the page behind the cards
+   --panel   a card
+   --panel-2 one step in from a card -- hovers, selected rows, bar tracks
+   --surface a floating overlay (the tooltip), and the cells of the two
+             hairline grids, which read against the 1px gap, not the card
+   --paper-2 survives only as the pre-repaint alias of --panel. Anything that
+             needs to be seen ON a card wants --panel-2; --paper-2 paints the
+             card's own colour and disappears. That is what happened to the
+             selected ranking row, the flow bar's track and the hero bar,
+             all three measuring exactly 1.000 against their ground. */
 
 /* ── the page under scroll ────────────────────────────────────────────────
    Four things answer to the scroll. None of them hides content to do it:
